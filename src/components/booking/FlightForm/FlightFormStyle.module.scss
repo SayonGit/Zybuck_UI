@@ -1,0 +1,27 @@
+/* Hide calendar icon for date inputs */
+.date-input-no-icon input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.date-input-no-icon input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.date-input-no-icon input[type="date"]::-webkit-inner-spin-button,
+.date-input-no-icon input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Make the entire date input clickable */
+.date-input-no-icon input[type="date"] {
+  cursor: pointer;
+}
+
+/* Firefox specific */
+.date-input-no-icon input[type="date"]::-moz-calendar-picker-indicator {
+  display: none;
+}
