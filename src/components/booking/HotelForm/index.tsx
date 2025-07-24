@@ -109,7 +109,7 @@ const HotelStayForm: React.FC = () => {
         {/* Primary Search Row - Responsive Layout */}
         <div className="flex flex-col lg:flex-row gap-2 lg:gap-2">
           {/* Destination Field - Takes more space on desktop */}
-          <div className="w-full lg:flex-1 lg:max-w-md">
+          <div className="w-full lg:flex-1">
             <InputField
               className="w-full h-input"
               label="Going to"

@@ -10,6 +10,8 @@ interface InputFieldProps {
   required?: boolean;
   className?: string;
   isDouble?: boolean;
+  min?: string; // Added this prop for date inputs
+  max?: string; // Added this as well for completeness
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -22,6 +24,8 @@ const InputField: React.FC<InputFieldProps> = ({
   required = false,
   className = "",
   isDouble = false,
+  min,
+  max,
 }) => {
   return (
     <div
@@ -40,6 +44,8 @@ const InputField: React.FC<InputFieldProps> = ({
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
         required={required}
+        min={min}
+        max={max}
         className="w-full p-0 border-none focus:outline-none focus:ring-0 font-semibold text-gray-800 placeholder:text-gray-400"
       />
     </div>

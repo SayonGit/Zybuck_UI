@@ -1,4 +1,3 @@
-// src/hooks/useCarForm.ts
 import { useAppSelector } from "../store/hooks";
 
 const UseCarForm = () => {
@@ -28,7 +27,12 @@ const UseCarForm = () => {
 
   // Helper function to calculate rental duration
   const getRentalDuration = () => {
-    if (!formData.pickupDate || !formData.dropoffDate) {
+    if (
+      !formData.pickupDate ||
+      !formData.dropoffDate ||
+      !formData.pickupTime ||
+      !formData.dropoffTime
+    ) {
       return null;
     }
 
@@ -40,6 +44,11 @@ const UseCarForm = () => {
     );
 
     const diffTime = dropoffDateTime.getTime() - pickupDateTime.getTime();
+
+    if (diffTime <= 0) {
+      return null; // Invalid date range
+    }
+
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
 
@@ -55,6 +64,11 @@ const UseCarForm = () => {
     return formData.pickupDate || new Date().toISOString().split("T")[0];
   };
 
+  // Helper function to get today's date for minimum pickup date
+  const getTodayDate = () => {
+    return new Date().toISOString().split("T")[0];
+  };
+
   return {
     formData,
     isLoading,
@@ -63,6 +77,7 @@ const UseCarForm = () => {
     isFormValid,
     getRentalDuration,
     getMinDropoffDate,
+    getTodayDate,
   };
 };
 
