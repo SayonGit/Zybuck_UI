@@ -22,6 +22,8 @@
   --height-input: 52px;
   --min-height-half-screen: 50vh;
   --border-color: #d2d2d2;
+  --lighest-gray: #f4f1f1;
+  --drop-card-shadow: 2px 4px 16px 0px rgba(17, 34, 17, 0.1);
 }
 
 .h-input {
@@ -33,10 +35,38 @@
 .b-clr {
   border-color: var(--border-color);
 }
+.shadow-card {
+  box-shadow: var(--drop-card-shadow);
+}
+
+.bg-lighest-gray {
+  background-color: var(--lighest-gray);
+}
 
 /* Utilities */
+
+body {
+  background-color: #fafbfc;
+}
+
 button {
   cursor: pointer;
+}
+
+.main_container {
+  margin: 24px 8%;
+}
+
+@media (max-width: 768px) {
+  .main_container {
+    margin: 24px 4%;
+  }
+}
+
+@media (max-width: 480px) {
+  .main_container {
+    margin: 16px 2%;
+  }
 }
 
 /* Add these animations to your global CSS file (src/index.css) */

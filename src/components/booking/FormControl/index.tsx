@@ -71,7 +71,7 @@ const FormControl: React.FC = () => {
 
   return (
     <div className="flight-search-container md:min-h-half-screen">
-      <div className="bg-gradient-blue rounded-3xl mx-2 sm:mx-4 lg:mx-8">
+      <div className="bg-gradient-blue rounded-3xl">
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 lg:gap-8 min-h-[600px]">
           {/* Left Column - Search Form */}
           <div className="xl:col-span-3 p-4 sm:p-6 lg:p-8">
@@ -86,38 +86,40 @@ const FormControl: React.FC = () => {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-8 overflow-x-auto">
-              {tabs.map((tab) => (
-                <div
-                  className="flex flex-col items-center gap-1.5 flex-shrink-0"
-                  key={tab.id}
-                >
-                  <button
-                    className={`flex flex-col items-center p-3 sm:p-4 rounded-xl transition-colors ${
-                      activeTab === tab.id
-                        ? "bg-red-400 shadow-sm text-white"
-                        : "text-gray-600 bg-white hover:bg-white/50"
-                    }`}
-                    onClick={() => setActiveTab(tab.id as TabTypes)}
+            <div>
+              <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-8 overflow-x-auto">
+                {tabs.map((tab) => (
+                  <div
+                    className="flex flex-col items-center gap-1.5 flex-shrink-0"
+                    key={tab.id}
                   >
-                    <Icon
-                      icon={tab.icon}
-                      fontSize={20}
-                      className="sm:text-2xl"
-                      rotate={tab.rotate}
-                    />
-                  </button>
-                  <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
-                    {tab.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+                    <button
+                      className={`flex flex-col items-center p-3 sm:p-4 rounded-xl transition-colors ${
+                        activeTab === tab.id
+                          ? "bg-red-400 shadow-sm text-white"
+                          : "text-gray-600 bg-white hover:bg-white/50"
+                      }`}
+                      onClick={() => setActiveTab(tab.id as TabTypes)}
+                    >
+                      <Icon
+                        icon={tab.icon}
+                        fontSize={20}
+                        className="sm:text-2xl"
+                        rotate={tab.rotate}
+                      />
+                    </button>
+                    <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
+                      {tab.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
 
-            {/* Flight Form */}
-            {activeTab === "flights" && <FlightForm />}
-            {activeTab === "stay" && <HotelForm />}
-            {activeTab === "car" && <CarForm />}
+              {/* Flight Form */}
+              {activeTab === "flights" && <FlightForm />}
+              {activeTab === "stay" && <HotelForm />}
+              {activeTab === "car" && <CarForm />}
+            </div>
           </div>
 
           {/* Right Column - Image Gallery */}

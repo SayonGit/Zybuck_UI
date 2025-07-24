@@ -12,7 +12,7 @@ export interface FlightSearchData {
 }
 
 export interface ServiceFeature {
-  icon: string;
+  element: React.FC;
   title: string;
   description: string;
   stats?: string;

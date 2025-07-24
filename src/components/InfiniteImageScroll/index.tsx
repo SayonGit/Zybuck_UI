@@ -54,7 +54,7 @@ const InfiniteScrollImages: React.FC<InfiniteScrollImagesProps> = ({
             {images.slice(0, Math.ceil(images.length / 2)).map((image) => (
               <div
                 key={`left-2-${image.id}`}
-                className={`rounded-2xl h-48 shadow-lg overflow-hidden flex-shrink-0 ${
+                className={`rounded-2xl h-64 shadow-lg overflow-hidden flex-shrink-0 ${
                   image.className || ""
                 }`}
               >
@@ -81,7 +81,7 @@ const InfiniteScrollImages: React.FC<InfiniteScrollImagesProps> = ({
             {images.slice(Math.ceil(images.length / 2)).map((image) => (
               <div
                 key={`right-1-${image.id}`}
-                className={`rounded-2xl h-32 shadow-lg overflow-hidden flex-shrink-0 ${
+                className={`rounded-2xl h-48 shadow-lg overflow-hidden flex-shrink-0 ${
                   image.className || ""
                 }`}
               >
@@ -97,7 +97,7 @@ const InfiniteScrollImages: React.FC<InfiniteScrollImagesProps> = ({
             {images.slice(Math.ceil(images.length / 2)).map((image) => (
               <div
                 key={`right-2-${image.id}`}
-                className={`rounded-2xl h-32 shadow-lg overflow-hidden flex-shrink-0 ${
+                className={`rounded-2xl h-48 shadow-lg overflow-hidden flex-shrink-0 ${
                   image.className || ""
                 }`}
               >
