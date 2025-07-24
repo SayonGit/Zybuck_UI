@@ -1,5 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Custom theme configuration */
+@theme {
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  --font-family-sans: Montserrat, system-ui, sans-serif;
+  --height-input: 52px;
+  --min-height-half-screen: 50vh;
+  --border-color: #d2d2d2;
+  --lighest-gray: #f4f1f1;
+  --drop-card-shadow: 2px 4px 16px 0px rgba(17, 34, 17, 0.1);
+}
+
+.h-input {
+  height: var(--height-input);
+}
+.min-h-half-screen {
+  min-height: var(--height-half-screen);
+}
+.b-clr {
+  border-color: var(--border-color);
+}
+.shadow-card {
+  box-shadow: var(--drop-card-shadow);
+}
+
+.bg-lighest-gray {
+  background-color: var(--lighest-gray);
+}
+
+/* Utilities */
+
+body {
+  background-color: #fafbfc;
+}
+
+button {
+  cursor: pointer;
+}
+
+.main_container {
+  margin: 24px 8%;
+}
+
+@media (max-width: 768px) {
+  .main_container {
+    margin: 24px 4%;
+  }
+}
+
+@media (max-width: 480px) {
+  .main_container {
+    margin: 16px 2%;
+  }
+}
+
+/* Add these animations to your global CSS file (src/index.css) */
+@keyframes scroll-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scroll-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-up linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scroll-down linear infinite;
+}
+
+/* Pause animation on hover for better UX */
+.animate-scroll-left:hover,
+.animate-scroll-right:hover {
+  animation-play-state: paused;
 }

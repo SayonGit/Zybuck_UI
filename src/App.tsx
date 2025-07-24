@@ -1,8 +1,14 @@
+import Header from "./components/common/Header";
+import Dashboard from "./pages/dashboard";
+
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">hello world</h1>
-    </>
+    <div className="dashboard-container min-h-screen">
+      <Header />
+      <main className="pb-16">
+        <Dashboard />
+      </main>
+    </div>
   );
 }
 
