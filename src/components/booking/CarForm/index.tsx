@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../store/hooks";
 import {
   updateCarFormData,
@@ -8,9 +9,11 @@ import {
 import InputField from "../../common/InputField";
 import Button from "../../common/Button";
 import UseCarForm from "../../../hooks/useCarForm";
+import { navigateToSearch } from "../../../utils/searchUtils";
 
 const CarSearchForm: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     formData,
     isLoading,
@@ -31,16 +34,21 @@ const CarSearchForm: React.FC = () => {
 
     dispatch(setCarLoading(true));
 
-    setTimeout(() => {
-      console.log("=== CAR SEARCH FORM SUBMISSION ===");
-      console.log("Form Data:", formData);
-      console.log("Same dropoff location:", isSameDropoffLocation);
-      console.log("Rental duration:", getRentalDuration());
-      console.log("=====================================");
+    // Navigate to search page with car parameters
+    navigateToSearch(navigate, "car", {
+      pickupLocation: formData.pickupLocation,
+      dropoffLocation: formData.dropoffLocation,
+      pickupDate: formData.pickupDate,
+      dropoffDate: formData.dropoffDate,
+      pickupTime: formData.pickupTime,
+      dropoffTime: formData.dropoffTime,
+      driversAge: formData.driversAge,
+    });
 
+    // Reset loading state after a short delay
+    setTimeout(() => {
       dispatch(setCarLoading(false));
-      alert("Car search submitted! Check console for details.");
-    }, 2000);
+    }, 1000);
   };
 
   const handlePickupLocationChange = (value: string) => {

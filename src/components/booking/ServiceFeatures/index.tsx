@@ -3,8 +3,13 @@ import type { ServiceFeature } from "../../../types";
 import AirlineLogosStack from "./AirlineLogosStack";
 import UserAvatarStack from "./RandomUserStack";
 import StarRating from "./RatingStack";
+import { useAppData } from "../../../hooks/useAppData";
 
 const ServiceFeatures: React.FC = () => {
+  // Get service features from Redux store
+  const { serviceFeatures } = useAppData();
+
+  // Map service features to components
   const features: ServiceFeature[] = [
     {
       element: AirlineLogosStack,

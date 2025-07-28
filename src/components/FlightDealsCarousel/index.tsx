@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import FlightDealCard from "./FlightDealCard";
+import { useAppData } from "../../hooks/useAppData";
 
 interface FlightDeal {
   id: string;
@@ -21,146 +22,26 @@ const FlightDealsCarousel: React.FC = () => {
     "international"
   );
 
-  // Updated flight deals with working image URLs and types
-  const allFlightDeals: FlightDeal[] = [
-    // International Flights
-    {
-      id: "1",
-      destination: "Paris",
-      route: "Washington, D.C. to Paris",
-      price: "$649",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=1",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "2",
-      destination: "Tokyo",
-      route: "Washington, D.C. to Tokyo",
-      price: "$899",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=2",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "3",
-      destination: "London",
-      route: "Washington, D.C. to London",
-      price: "$549",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=3",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "4",
-      destination: "Dubai",
-      route: "Washington, D.C. to Dubai",
-      price: "$749",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=4",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "5",
-      destination: "Sydney",
-      route: "Washington, D.C. to Sydney",
-      price: "$1,199",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=5",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "6",
-      destination: "Cairo",
-      route: "Washington, D.C. to Cairo",
-      price: "$849",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=6",
-      isRoundTrip: true,
-      type: "international",
-    },
-    // Domestic Flights
-    {
-      id: "7",
-      destination: "Los Angeles",
-      route: "Washington, D.C. to Los Angeles",
-      price: "$299",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=7",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "8",
-      destination: "Miami",
-      route: "Washington, D.C. to Miami",
-      price: "$199",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=8",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "9",
-      destination: "Chicago",
-      route: "Washington, D.C. to Chicago",
-      price: "$149",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=9",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "10",
-      destination: "San Francisco",
-      route: "Washington, D.C. to San Francisco",
-      price: "$349",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=10",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "11",
-      destination: "Las Vegas",
-      route: "Washington, D.C. to Las Vegas",
-      price: "$229",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=11",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "12",
-      destination: "Seattle",
-      route: "Washington, D.C. to Seattle",
-      price: "$279",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=12",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-  ];
+  // Get flight deals from Redux store
+  const { flightDeals } = useAppData();
+
+  // Transform Redux data to match component interface
+  const allFlightDeals: FlightDeal[] = flightDeals.map((deal: any) => ({
+    id: deal.id.toString(),
+    destination: deal.to,
+    route: `${deal.from} to ${deal.to}`,
+    price: `$${deal.price}`,
+    duration: `${deal.departure} - ${deal.return}`,
+    dates: "Round-trip",
+    image: deal.image,
+    isRoundTrip: true,
+    type: deal.type || "international",
+  }));
 
   // Filter deals based on active tab
-  const flightDeals = allFlightDeals.filter((deal) => deal.type === activeTab);
+  const filteredFlightDeals = allFlightDeals.filter(
+    (deal) => deal.type === activeTab
+  );
 
   const itemsPerView = {
     mobile: 1,
@@ -180,7 +61,10 @@ const FlightDealsCarousel: React.FC = () => {
   const [currentItemsPerView, setCurrentItemsPerView] = useState(
     getItemsPerView()
   );
-  const maxIndex = Math.max(0, flightDeals.length - currentItemsPerView);
+  const maxIndex = Math.max(
+    0,
+    filteredFlightDeals.length - currentItemsPerView
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -314,7 +198,7 @@ const FlightDealsCarousel: React.FC = () => {
                 }%)`,
               }}
             >
-              {flightDeals.map((deal) => (
+              {filteredFlightDeals.map((deal) => (
                 <div
                   key={deal.id}
                   className="flex-shrink-0 px-2"
@@ -345,7 +229,7 @@ const FlightDealsCarousel: React.FC = () => {
         </div>
 
         {/* No deals message */}
-        {flightDeals.length === 0 && (
+        {filteredFlightDeals.length === 0 && (
           <div className="text-center py-12">
             <Icon
               icon="heroicons:exclamation-triangle-20-solid"

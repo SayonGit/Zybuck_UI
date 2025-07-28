@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import DestinationCard from "./DestinationCard";
-import { allDestinations } from "./DestinationData";
+import { useAppData } from "../../hooks/useAppData";
 
 type TabType = "popular" | "cities" | "countries" | "regions" | "airports";
 
@@ -9,11 +9,12 @@ const PopularDestinationsGrid: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("popular");
   const [currentPage, setCurrentPage] = useState(0);
 
-  // All destinations data with categories
+  // Get popular destinations from Redux store
+  const { popularDestinations } = useAppData();
 
   // Filter destinations based on active tab
-  const filteredDestinations = allDestinations.filter(
-    (dest) => dest.category === activeTab
+  const filteredDestinations = popularDestinations.filter(
+    (dest: any) => dest.category === activeTab
   );
 
   // 9 cards per page (3x3 grid)

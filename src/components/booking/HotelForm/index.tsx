@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../store/hooks";
 import InputField from "../../common/InputField";
 import Button from "../../common/Button";
@@ -10,93 +11,46 @@ import {
   updateHotelFormData,
   updateHotelPassengerCount,
 } from "../../../store/slices/hoteStaySlice";
+import { navigateToSearch } from "../../../utils/searchUtils";
+import { useAppData } from "../../../hooks/useAppData";
 
 const HotelStayForm: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { formData, isLoading } = UseHotelForm();
 
-  const guestsCitizenshipOptions = [
-    { value: "us", label: "United States" },
-    { value: "uk", label: "United Kingdom" },
-    { value: "ca", label: "Canada" },
-    { value: "au", label: "Australia" },
-    { value: "de", label: "Germany" },
-    { value: "fr", label: "France" },
-    { value: "in", label: "India" },
-    { value: "cn", label: "China" },
-    { value: "jp", label: "Japan" },
-    { value: "br", label: "Brazil" },
-    { value: "mx", label: "Mexico" },
-    { value: "it", label: "Italy" },
-    { value: "es", label: "Spain" },
-    { value: "nl", label: "Netherlands" },
-    { value: "ch", label: "Switzerland" },
-    { value: "se", label: "Sweden" },
-    { value: "no", label: "Norway" },
-    { value: "dk", label: "Denmark" },
-    { value: "fi", label: "Finland" },
-    { value: "be", label: "Belgium" },
-    { value: "at", label: "Austria" },
-    { value: "ie", label: "Ireland" },
-    { value: "nz", label: "New Zealand" },
-    { value: "sg", label: "Singapore" },
-    { value: "ae", label: "United Arab Emirates" },
-    { value: "sa", label: "Saudi Arabia" },
-    { value: "kr", label: "South Korea" },
-    { value: "th", label: "Thailand" },
-    { value: "my", label: "Malaysia" },
-    { value: "ph", label: "Philippines" },
-    { value: "id", label: "Indonesia" },
-    { value: "vn", label: "Vietnam" },
-    { value: "za", label: "South Africa" },
-    { value: "eg", label: "Egypt" },
-    { value: "ng", label: "Nigeria" },
-    { value: "ar", label: "Argentina" },
-    { value: "cl", label: "Chile" },
-    { value: "co", label: "Colombia" },
-    { value: "pe", label: "Peru" },
-    { value: "tr", label: "Turkey" },
-    { value: "ru", label: "Russia" },
-    { value: "pl", label: "Poland" },
-    { value: "cz", label: "Czech Republic" },
-    { value: "hu", label: "Hungary" },
-    { value: "gr", label: "Greece" },
-    { value: "pt", label: "Portugal" },
-    { value: "il", label: "Israel" },
-    { value: "other", label: "Other" },
-  ];
-
-  const starRatingOptions = [
-    { value: "any", label: "Any rating" },
-    { value: "2", label: "2 stars" },
-    { value: "3", label: "3 stars" },
-    { value: "4", label: "4 stars" },
-    { value: "5", label: "5 stars" },
-  ];
-
-  const earlyCheckinoutTimeOptions = [
-    { value: "08:00", label: "08:00" },
-    { value: "09:00", label: "09:00" },
-    { value: "10:00", label: "10:00" },
-    { value: "11:00", label: "11:00" },
-    { value: "12:00", label: "12:00" },
-  ];
-
-  const roomTypeOptions = ["RO", "BB", "HB", "FB", "AI"];
+  // Get data from Redux store
+  const {
+    citizenshipOptions,
+    starRatingOptions,
+    earlyCheckinoutTimeOptions,
+    roomTypeOptions,
+  } = useAppData();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(setHotelLoading(true));
 
-    setTimeout(() => {
-      console.log("=== HOTEL SEARCH FORM SUBMISSION ===");
-      console.log("Form Data:", formData);
-      console.log("Total Guests:", formData.adults + formData.children);
-      console.log("=====================================");
+    // Navigate to search page with hotel parameters
+    navigateToSearch(navigate, "hotel", {
+      destination: formData.destination,
+      checkInDate: formData.checkInDate,
+      checkOutDate: formData.checkOutDate,
+      rooms: formData.rooms,
+      adults: formData.adults,
+      children: formData.children,
+      starRating: formData.starRating,
+      roomType: formData.roomType,
+      guestsCitizenship: formData.guestsCitizenship,
+      earlyCheckInDate: formData.earlyCheckInDate,
+      earlyCheckOutDate: formData.earlyCheckOutDate,
+      freeCancellation: formData.freeCancellation,
+    });
 
+    // Reset loading state after a short delay
+    setTimeout(() => {
       dispatch(setHotelLoading(false));
-      alert("Hotel search submitted! Check console for details.");
-    }, 2000);
+    }, 1000);
   };
 
   return (
@@ -348,7 +302,7 @@ const HotelStayForm: React.FC = () => {
               className="w-full"
               label="Guests' citizenship"
               value={formData.guestsCitizenship}
-              options={guestsCitizenshipOptions}
+              options={citizenshipOptions}
               onChange={(value) =>
                 dispatch(updateHotelFormData({ guestsCitizenship: value }))
               }
@@ -397,7 +351,7 @@ const HotelStayForm: React.FC = () => {
             <div className="grid grid-cols-3 sm:grid-cols-5 rounded-lg border b-clr overflow-hidden">
               {roomTypeOptions.map((option, index) => (
                 <button
-                  key={option}
+                  key={option.value}
                   type="button"
                   className={`h-input px-2 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center cursor-pointer hover:bg-gray-50
                     ${
@@ -407,17 +361,17 @@ const HotelStayForm: React.FC = () => {
                     }
                   `}
                   onClick={() =>
-                    dispatch(updateHotelFormData({ roomType: option }))
+                    dispatch(updateHotelFormData({ roomType: option.value }))
                   }
                 >
                   <span
                     className={
-                      formData.roomType === option
+                      formData.roomType === option.value
                         ? "border-b-4 pb-1 border-b-[#FFD9A3] font-extrabold"
                         : ""
                     }
                   >
-                    {option}
+                    {option.label}
                   </span>
                 </button>
               ))}

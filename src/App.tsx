@@ -1,14 +1,33 @@
-import Header from "./components/common/Header";
-import Dashboard from "./pages/dashboard";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
+import Dashboard from "./pages/Dashboard";
+import DetailsPage from "./pages/DetailPage";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
+import SearchPage from "./pages/SearchPage";
+import { LoadingProvider } from "./context/LoadingContext";
 
 function App() {
   return (
-    <div className="dashboard-container min-h-screen">
-      <Header />
-      <main className="pb-16">
-        <Dashboard />
-      </main>
-    </div>
+    <LoadingProvider>
+      <Router>
+        <Routes>
+          {/* All routes with layout */}
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="search" element={<SearchPage />} />
+            <Route path="details/:id" element={<DetailsPage />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
+            {/* Catch all unmatched routes within the layout */}
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </Router>
+    </LoadingProvider>
   );
 }
 
