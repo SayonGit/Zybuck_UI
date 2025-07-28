@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../../../store/hooks";
 import { Icon } from "@iconify/react";
 import FlightSegment from "./FlightSegment";
 import PassengerCounters from "./PassengerCounters";

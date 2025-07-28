@@ -1,0 +1,128 @@
+.filterSlider {
+  @apply relative;
+
+  .sliderTrack {
+    @apply w-full h-2 bg-gray-200 rounded;
+  }
+
+  .sliderHandle {
+    @apply absolute top-0 w-6 h-6 bg-blue-600 rounded-full cursor-pointer;
+    transform: translateY(-50%);
+
+    &:focus {
+      @apply ring-2 ring-blue-500 ring-offset-2;
+    }
+
+    &:hover {
+      @apply bg-blue-700;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .sliderHandle {
+      @apply w-5 h-5;
+    }
+  }
+}
+
+.mobileFilterSection {
+  .sectionContent {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+
+    &.expanded {
+      max-height: 1000px;
+    }
+  }
+}
+
+// Custom range slider styles
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+
+  &::-webkit-slider-track {
+    background: transparent;
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #2563eb;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background: #1d4ed8;
+    }
+  }
+
+  &::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #2563eb;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background: #1d4ed8;
+    }
+  }
+}
+
+.rangeSlider {
+  &::-webkit-slider-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+  }
+
+  &::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    border: none;
+  }
+
+  &::-webkit-slider-track {
+    background: transparent;
+    height: 8px;
+  }
+
+  &::-moz-range-track {
+    background: transparent;
+    height: 8px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus::-webkit-slider-thumb {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(59, 130, 246, 0.3);
+  }
+
+  &:focus::-moz-range-thumb {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(59, 130, 246, 0.3);
+  }
+}

@@ -1,73 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import FlightForm from "../FlightForm";
 import "./index.scss";
 import { Icon } from "@iconify/react";
 import InfiniteScrollImages from "../../InfiniteImageScroll";
 import HotelForm from "../HotelForm";
 import CarForm from "../CarForm";
+import { useAppData } from "../../../hooks/useAppData";
 
 type TabTypes = "flights" | "stay" | "car";
 
 const FormControl: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabTypes>("flights");
-  const tabs = [
-    {
-      id: "flights",
-      label: "Flights",
-      icon: "material-symbols-light:flight",
-      rotate: 45,
-    },
-    {
-      id: "stay",
-      label: "Stay",
-      icon: "material-symbols:king-bed-rounded",
-      rotate: 0,
-    },
-    { id: "car", label: "Car", icon: "mdi:car", rotate: 0 },
-  ];
 
-  const scrollingImages = [
-    {
-      id: "1",
-      src: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "London, United Kingdom - Big Ben and Westminster",
-    },
-    {
-      id: "2",
-      src: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "Paris, France - Eiffel Tower at sunset",
-    },
-    {
-      id: "3",
-      src: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "Tokyo, Japan - City skyline with modern buildings",
-    },
-    {
-      id: "4",
-      src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "Santorini, Greece - White buildings and blue domes",
-    },
-    {
-      id: "5",
-      src: "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "Barcelona, Spain - Sagrada Familia cathedral",
-    },
-    {
-      id: "6",
-      src: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "Dubai, UAE - Burj Khalifa skyline at sunset",
-    },
-    {
-      id: "7",
-      src: "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "New York, USA - Manhattan skyline",
-    },
-    {
-      id: "8",
-      src: "https://images.unsplash.com/photo-1549144511-f099e773c147?w=400&h=300&fit=crop&auto=format&q=75",
-      alt: "Istanbul, Turkey - Hagia Sophia and cityscape",
-    },
-  ];
+  // Get data from Redux store
+  const { tabs, scrollingImages } = useAppData();
+
+  // Initialize active tab from URL parameter
+  useEffect(() => {
+    const tabFromUrl = searchParams.get("tab") as TabTypes;
+    if (tabFromUrl && tabs.some((tab) => tab.id === tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams, tabs]);
+
+  // Update URL when tab changes
+  const handleTabChange = (tabId: TabTypes) => {
+    setActiveTab(tabId);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("tab", tabId);
+    setSearchParams(newSearchParams);
+  };
 
   return (
     <div className="flight-search-container md:min-h-half-screen">
@@ -99,7 +64,7 @@ const FormControl: React.FC = () => {
                           ? "bg-red-400 shadow-sm text-white"
                           : "text-gray-600 bg-white hover:bg-white/50"
                       }`}
-                      onClick={() => setActiveTab(tab.id as TabTypes)}
+                      onClick={() => handleTabChange(tab.id as TabTypes)}
                     >
                       <Icon
                         icon={tab.icon}

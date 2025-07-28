@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import TrendingCities from "./TrendingCitiesCard";
+import { useAppData } from "../../hooks/useAppData";
 
 interface TrendingCities {
   id: string;
@@ -18,143 +19,23 @@ const TrendingCitiesCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Updated flight deals with working image URLs and types
-  const allTrendingCities: TrendingCities[] = [
-    // International Flights
-    {
-      id: "1",
-      destination: "Paris",
-      route: "Washington, D.C. to Paris",
-      price: "$649",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=1",
+  // Get trending cities from Redux store
+  const { trendingCities } = useAppData();
+
+  // Transform Redux data to match component interface
+  const allTrendingCities: TrendingCities[] = trendingCities.map(
+    (city: any) => ({
+      id: city.id.toString(),
+      destination: city.name,
+      route: `${city.name}, ${city.country}`,
+      price: `$${city.deals}`, // Using deals count as price for demo
+      duration: "Trending",
+      dates: "Popular destination",
+      image: city.image,
       isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "2",
-      destination: "Tokyo",
-      route: "Washington, D.C. to Tokyo",
-      price: "$899",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=2",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "3",
-      destination: "London",
-      route: "Washington, D.C. to London",
-      price: "$549",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=3",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "4",
-      destination: "Dubai",
-      route: "Washington, D.C. to Dubai",
-      price: "$749",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=4",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "5",
-      destination: "Sydney",
-      route: "Washington, D.C. to Sydney",
-      price: "$1,199",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=5",
-      isRoundTrip: true,
-      type: "international",
-    },
-    {
-      id: "6",
-      destination: "Cairo",
-      route: "Washington, D.C. to Cairo",
-      price: "$849",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=6",
-      isRoundTrip: true,
-      type: "international",
-    },
-    // Domestic Flights
-    {
-      id: "7",
-      destination: "Los Angeles",
-      route: "Washington, D.C. to Los Angeles",
-      price: "$299",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=7",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "8",
-      destination: "Miami",
-      route: "Washington, D.C. to Miami",
-      price: "$199",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=8",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "9",
-      destination: "Chicago",
-      route: "Washington, D.C. to Chicago",
-      price: "$149",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=9",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "10",
-      destination: "San Francisco",
-      route: "Washington, D.C. to San Francisco",
-      price: "$349",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=10",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "11",
-      destination: "Las Vegas",
-      route: "Washington, D.C. to Las Vegas",
-      price: "$229",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=11",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-    {
-      id: "12",
-      destination: "Seattle",
-      route: "Washington, D.C. to Seattle",
-      price: "$279",
-      duration: "Jul 1 - Jul 11",
-      dates: "Round-trip",
-      image: "https://picsum.photos/800/600?random=12",
-      isRoundTrip: true,
-      type: "domestic",
-    },
-  ];
+      type: "international", // Default to international
+    })
+  );
 
   const itemsPerView = {
     mobile: 1,
@@ -213,11 +94,9 @@ const TrendingCitiesCarousel: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
           <div className="text-left mb-6 lg:mb-0">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-              Top Flight Deals Near You
+              Trending Cities
             </h2>
-            <p className="text-gray-600">
-              What people says about Globie facilities
-            </p>
+            <p className="text-gray-600">Popular destinations travelers love</p>
           </div>
 
           {/* See All Button */}

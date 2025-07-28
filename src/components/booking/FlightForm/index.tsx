@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../store/hooks";
 import {
   updateFormData,
@@ -14,45 +15,45 @@ import UseFlightForm from "../../../hooks/useFlightForm";
 import PassengerCounters from "./PassengerCounters";
 import SingleTripForm from "./SingleTripForm";
 import MultipleDestinationForm from "./MultipleDestinationForm";
+import { useAppData } from "../../../hooks/useAppData";
 
 const FlightForm: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { formData, selectedTrip, selectedAirline, isLoading } =
     UseFlightForm();
 
-  const classOptions = [
-    "Economy",
-    "Premium Economy",
-    "Business",
-    "First Class",
-  ];
-
-  const airlineOptions = [
-    { value: "all", label: "All airlines" },
-    { value: "emirates", label: "Emirates" },
-    { value: "lufthansa", label: "Lufthansa" },
-    { value: "british-airways", label: "British Airways" },
-    { value: "air-india", label: "Air India", disabled: true },
-  ];
+  // Get data from Redux store
+  const { flightClassOptions, airlineOptions } = useAppData();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(setLoading(true));
 
-    setTimeout(() => {
-      console.log("=== FLIGHT SEARCH FORM SUBMISSION ===");
-      console.log("Form Data:", formData);
-      console.log("Selected Trip Type:", selectedTrip);
-      console.log("Selected Airline:", selectedAirline);
-      console.log(
-        "Total Passengers:",
-        formData.adults + formData.children + formData.infants
-      );
-      console.log("=====================================");
+    // Create URL search parameters from form data
+    const searchParams = new URLSearchParams();
 
+    // Add form data to search parameters
+    searchParams.set("from", formData.from || "");
+    searchParams.set("to", formData.to || "");
+    searchParams.set("departDate", formData.departDate || "");
+    if (formData.returnDate) {
+      searchParams.set("returnDate", formData.returnDate);
+    }
+    searchParams.set("adults", formData.adults.toString());
+    searchParams.set("children", formData.children.toString());
+    searchParams.set("infants", formData.infants.toString());
+    searchParams.set("tripType", selectedTrip);
+    searchParams.set("class", formData.class);
+    searchParams.set("airline", selectedAirline);
+
+    // Navigate to search page with query parameters
+    navigate(`/search?${searchParams.toString()}`);
+
+    // Reset loading state after a short delay
+    setTimeout(() => {
       dispatch(setLoading(false));
-      alert("Form submitted! Check console for details.");
-    }, 2000);
+    }, 1000);
   };
 
   return (
@@ -81,13 +82,13 @@ const FlightForm: React.FC = () => {
         {/* Class Selection */}
         <div className="w-full md:w-[64%]">
           <div className="grid grid-cols-2 md:grid-cols-4 rounded-lg border b-clr overflow-hidden">
-            {classOptions.map((option, index) => (
+            {flightClassOptions.map((option, index) => (
               <button
-                key={option}
+                key={option.value}
                 type="button"
                 className={`h-input px-2 sm:px-3 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center cursor-pointer hover:bg-gray-50
                   ${
-                    index < classOptions.length - 1 && index !== 1
+                    index < flightClassOptions.length - 1 && index !== 1
                       ? "border-r border-r-[#D2D2D2]"
                       : ""
                   }
@@ -97,19 +98,19 @@ const FlightForm: React.FC = () => {
                 onClick={() =>
                   dispatch(
                     updateFormData({
-                      class: option.toLowerCase().replace(" ", "") as any,
+                      class: option.value as any,
                     })
                   )
                 }
               >
                 <span
                   className={
-                    formData.class === option.toLowerCase().replace(" ", "")
+                    formData.class === option.value
                       ? "border-b-4 pb-1 border-b-[#FFD9A3] font-extrabold"
                       : ""
                   }
                 >
-                  {option}
+                  {option.label}
                 </span>
               </button>
             ))}

@@ -1,9 +1,8 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-import type { Destination } from "./DestinationData";
 
 interface DestinationCardProps {
-  destination: Destination;
+  destination: any;
 }
 
 const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
@@ -39,7 +38,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
               {destination.countryName}
             </p>
           </div>
-          {destination.isPopular && (
+          {destination.category === "popular" && (
             <div className="flex gap-4 items-center">
               <Icon icon="maki:arrow"></Icon>
               <div>

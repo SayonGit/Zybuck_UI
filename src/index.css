@@ -18,6 +18,10 @@
   --color-primary-800: #1e40af;
   --color-primary-900: #1e3a8a;
 
+  --color-secondary-500: color-mix(in srgb, #007aff 15%, transparent);
+  --color-secondary-600: color-mix(in srgb, #007aff 20%, transparent);
+  --color-secondary-700: color-mix(in srgb, #007aff 30%, transparent);
+
   --font-family-sans: Montserrat, system-ui, sans-serif;
   --height-input: 52px;
   --min-height-half-screen: 50vh;

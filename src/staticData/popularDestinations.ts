@@ -1,16 +1,6 @@
-export interface Destination {
-  id: string;
-  cityName: string;
-  countryName: string;
-  image: string;
-  isPopular?: boolean;
-  secondCityName?: string;
-  secondCountryName?: string;
-  category: "popular" | "cities" | "countries" | "regions" | "airports";
-}
-
-export const allDestinations: Destination[] = [
-  // Popular Routes
+// @ts-nocheck
+const popularDestinations = [
+  // Popular Routes (9 items)
   {
     id: "1",
     cityName: "Istanbul",
@@ -358,3 +348,5 @@ export const allDestinations: Destination[] = [
     category: "airports",
   },
 ];
+
+export default popularDestinations;

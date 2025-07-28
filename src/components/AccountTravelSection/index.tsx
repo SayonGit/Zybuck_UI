@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import FeatureItem from "./FeatureItem";
+import { useAppData } from "../../hooks/useAppData";
 
 const AccountTravelSection: React.FC = () => (
   <section className="py-12 px-4 sm:px-0 lg:px-0">
@@ -38,23 +39,19 @@ const AccountTravelSection: React.FC = () => (
 export default AccountTravelSection;
 
 export const FeatureItemContainer = () => {
+  // Get account travel features from Redux store
+  const { accountTravelFeatures } = useAppData();
+
   return (
     <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 bg-lighest-gray px-16 py-8">
-      <FeatureItem
-        icon="icon-park:search"
-        title="Search a huge selection"
-        description="Easily compare flights, airlines, and price – All in one place"
-      />
-      <FeatureItem
-        icon="twemoji:money-with-wings"
-        title="Pay no hidden fees"
-        description="Easily compare flights, airlines, and price – All in one place"
-      />
-      <FeatureItem
-        icon="emojione:admission-tickets"
-        title="Get more flexibility"
-        description="Easily compare flights, airlines, and price – All in one place"
-      />
+      {accountTravelFeatures.map((feature: any) => (
+        <FeatureItem
+          key={feature.id}
+          icon={feature.icon}
+          title={feature.title}
+          description={feature.description}
+        />
+      ))}
     </div>
   );
 };
