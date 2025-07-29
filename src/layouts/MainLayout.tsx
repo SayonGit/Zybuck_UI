@@ -13,9 +13,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   showFooter = true,
 }) => {
   return (
-    <div className="dashboard-container min-h-screen">
+    <div className="min-h-screen">
       {showHeader && <Header />}
-      <main className="pb-16">
+      <main className="pb-16 container mx-auto">
         <Outlet />
       </main>
       {showFooter && <Footer />}
