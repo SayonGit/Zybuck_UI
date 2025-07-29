@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import "./index.scss";
 import FormControl from "../../components/booking/FormControl";
 import ServiceFeatures from "../../components/booking/ServiceFeatures";
@@ -18,7 +17,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const tab = searchParams.get("tab");
     if (tab) {
-      // Scroll to the form section after a short delay to ensure it's rendered
+      // Scroll to the form section after a short delay to ens\ure it's rendered
       setTimeout(() => {
         const formElement = document.querySelector(".flight-search-container");
         if (formElement) {
@@ -33,7 +32,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <div className="main_container mx-2 sm:mx-4 lg:mx-8">
+      <div className="container mt-4">
         <FormControl />
         <ServiceFeatures />
         <FlightDealsCarousel />
@@ -41,7 +40,7 @@ const Dashboard: React.FC = () => {
         <AccountTravelSection />
       </div>
       <FeatureItemContainer />
-      <div className="main_container">
+      <div className="container">
         <PopularDestinationsCarousel />
       </div>
     </>

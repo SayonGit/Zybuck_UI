@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 interface ScrollingImage {
   id: string;
@@ -9,7 +9,7 @@ interface ScrollingImage {
 
 interface InfiniteScrollImagesProps {
   images: ScrollingImage[];
-  speed?: number; // Duration in seconds for one complete cycle
+  speed?: number;
   direction?: "up" | "down";
   className?: string;
 }
@@ -20,9 +20,47 @@ const InfiniteScrollImages: React.FC<InfiniteScrollImagesProps> = ({
   direction = "up",
   className = "",
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerHeight, setContainerHeight] = useState<number>(600); // Default reasonable height
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current?.parentElement) {
+        const parentHeight = containerRef.current.parentElement.clientHeight;
+        // Set reasonable bounds: minimum 500px, maximum 700px
+        const boundedHeight = Math.max(500, Math.min(parentHeight, 700));
+        setContainerHeight(boundedHeight);
+      }
+    };
+
+    // Delay initial height calculation to allow forms to render
+    const timeoutId = setTimeout(updateHeight, 100);
+
+    const resizeObserver = new ResizeObserver(() => {
+      // Debounce the height updates to prevent frequent changes
+      setTimeout(updateHeight, 50);
+    });
+
+    if (containerRef.current?.parentElement) {
+      resizeObserver.observe(containerRef.current.parentElement);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return (
     <div
-      className={`hidden lg:block min-h-half-screen max-h-[60vh] ${className}`}
+      ref={containerRef}
+      className={`hidden lg:block w-full ${className}`}
+      style={{
+        height: `${containerHeight}px`,
+        transition: "height 0.3s ease-in-out", // Smooth height transitions
+        minHeight: "500px",
+        maxHeight: "700px",
+      }}
     >
       <div className="grid grid-cols-2 gap-4 h-full overflow-hidden">
         {/* Left Column - Larger images */}
@@ -73,7 +111,7 @@ const InfiniteScrollImages: React.FC<InfiniteScrollImagesProps> = ({
           <div
             className="flex flex-col space-y-4 pt-8 animate-scroll-right"
             style={{
-              animationDuration: `${speed * 1.2}s`, // Slightly different speed for variety
+              animationDuration: `${speed * 1.2}s`,
               animationDirection: direction === "up" ? "reverse" : "normal",
             }}
           >
