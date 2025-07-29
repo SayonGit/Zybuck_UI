@@ -2,7 +2,7 @@ interface HotelSummaryProps {
   searchParams: URLSearchParams;
 }
 
-export const HotelSummary = ({ searchParams }: HotelSummaryProps) => {
+export const HotelSummary = ({}: HotelSummaryProps) => {
   // Implementation similar to FlightSummary but for hotels
   return (
     <div className="p-6">

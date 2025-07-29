@@ -2,7 +2,7 @@ interface CarSummaryProps {
   searchParams: URLSearchParams;
 }
 
-export const CarSummary = ({ searchParams }: CarSummaryProps) => {
+export const CarSummary = ({}: CarSummaryProps) => {
   // Implementation similar to FlightSummary but for cars
   return (
     <div className="p-6">

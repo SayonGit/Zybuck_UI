@@ -43,7 +43,7 @@ export const SortingTabs = ({
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
       <div className="flex border-b border-gray-200 overflow-x-auto">
-        {tabs.map((tab, index) => (
+        {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setSortBy(tab.id)}

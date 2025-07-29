@@ -12,7 +12,7 @@ interface SearchFiltersProps {
   searchType: string;
 }
 
-export const SearchFilters = ({ searchType }: SearchFiltersProps) => {
+export const SearchFilters = ({}: SearchFiltersProps) => {
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
   >({
