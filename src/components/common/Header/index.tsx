@@ -1,19 +1,19 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { navigateToForm } from "../../../utils/navigationUtils";
+import { Link /*, useLocation, useNavigate*/ } from "react-router-dom";
+// import { navigateToForm } from "../../../utils/navigationUtils";
 import "./index.scss";
 
 const Header: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
+  // const isActive = (path: string) => {
+  //   return location.pathname === path;
+  // };
 
-  const handleQuickNav = (formType: "flights" | "stay" | "car") => {
-    navigateToForm(navigate, formType, false);
-  };
+  // const handleQuickNav = (formType: "flights" | "stay" | "car") => {
+  //   navigateToForm(navigate, formType, false);
+  // };
 
   return (
     <header className="flex justify-between items-center p-6">

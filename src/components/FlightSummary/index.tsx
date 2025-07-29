@@ -1,4 +1,3 @@
-// components/FlightSummary.tsx
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 
@@ -12,12 +11,12 @@ export const FlightSummary = ({ searchParams }: FlightSummaryProps) => {
   const from = searchParams.get("from") || "Indira Gandhi - New Delhi";
   const to = searchParams.get("to") || "London City Airport, UK";
   const departDate = searchParams.get("departDate") || "24 Jun, Tu";
-  const returnDate = searchParams.get("returnDate") || "";
+  // const returnDate = searchParams.get("returnDate") || "";
   const adults = searchParams.get("adults") || "1";
   const children = searchParams.get("children") || "1";
   const infants = searchParams.get("infants") || "1";
   const classType = searchParams.get("class") || "Economy";
-  const airline = searchParams.get("airline") || "All airlines";
+  // const airline = searchParams.get("airline") || "All airlines";
 
   return (
     <div className="p-6">

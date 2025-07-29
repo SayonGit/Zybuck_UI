@@ -101,9 +101,9 @@ const FlightDealsCarousel: React.FC = () => {
     setCurrentIndex((prevIndex) => (prevIndex <= 0 ? maxIndex : prevIndex - 1));
   };
 
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-  };
+  // const goToSlide = (index: number) => {
+  //   setCurrentIndex(index);
+  // };
 
   const handleTabChange = (tab: "international" | "domestic") => {
     setActiveTab(tab);

@@ -21,11 +21,9 @@ interface FlightSegmentProps {
 
 const FlightSegment: React.FC<FlightSegmentProps> = ({
   segment,
-  index,
   onUpdate,
   onRemove,
   canRemove,
-  isLast,
 }) => {
   return (
     <div className="relative">
