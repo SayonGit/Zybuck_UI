@@ -59,6 +59,7 @@ export interface Flight {
   stops: number | null;
   price: number;
   flightNumber: string;
+  dealType: string;
   aircraft: string;
   bookingClass: string;
   layoverTime?: string;

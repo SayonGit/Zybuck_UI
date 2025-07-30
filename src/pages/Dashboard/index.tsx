@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <div className="container mt-4">
+      <div className="container lg:px-0 px-2 mt-4">
         <FormControl />
         <ServiceFeatures />
         <FlightDealsCarousel />
@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
         <AccountTravelSection />
       </div>
       <FeatureItemContainer />
-      <div className="container">
+      <div className="container lg:px-0 px-2">
         <PopularDestinationsCarousel />
       </div>
     </>

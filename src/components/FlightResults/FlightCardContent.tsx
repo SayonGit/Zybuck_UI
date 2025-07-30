@@ -2,6 +2,8 @@
 import { Icon } from "@iconify/react";
 import type { Flight } from "../../types";
 import Button from "../common/Button";
+import { useState } from "react";
+import { getStatusColor } from "./FlightCardHeader";
 
 interface FlightCardContentProps {
   flight: Flight;
@@ -16,6 +18,7 @@ export const FlightCardContent = ({
   isLoading,
   onSelect,
 }: FlightCardContentProps) => {
+  const [save, setSave] = useState(false);
   // Helper function to display stops information
   const getStopsDisplay = () => {
     if (!flight.stops || flight.stops === 0) {
@@ -46,8 +49,24 @@ export const FlightCardContent = ({
 
   return (
     /* Mobile Layout */
-    <div className="lg:hidden">
+    <div className="lg:hidden p-2">
       {/* Header Row - Airline Logo and Details */}
+      <div className="flex items-center justify-between mb-2">
+        <div
+          onClick={() => setSave(save ? false : true)}
+          className="flex rounded-sm items-center select-none justify-between border border-gray-200 px-2 py-1 w-fit gap-2 hover:border-gray-300 cursor-pointer"
+        >
+          <Icon icon={save ? "mdi:heart" : "mdi:heart-outline"}></Icon>
+          <h6 className="text-xs">Save</h6>
+        </div>
+        <div
+          className={`flex rounded-sm items-center select-none justify-between px-2 py-1 w-fit gap-2 ${getStatusColor(
+            flight.dealType
+          )}`}
+        >
+          <h4 className="font-semibold text-xs">{flight.dealType}</h4>
+        </div>
+      </div>
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-8 flex items-center justify-center flex-shrink-0">
@@ -66,7 +85,18 @@ export const FlightCardContent = ({
         </div>
         <div className="text-right">
           <div className="text-xl font-bold text-gray-900">₹{flight.price}</div>
-          <div className="text-xs text-gray-500">Value</div>
+          <div className="text-xs text-gray-500">
+            {flight.dealType === "Best" && "Basic Economy"}
+          </div>
+          <div className="text-xs text-gray-500">
+            {flight.dealType === "Best" && "Main Cabin"}
+          </div>
+          <div className="text-xs text-gray-500">
+            {flight.dealType === "Recommended" && "Basic Premium"}
+          </div>
+          <div className="text-xs text-gray-500">
+            {flight.dealType === "Cheapest" && "Value"}
+          </div>
         </div>
       </div>
 
@@ -86,9 +116,6 @@ export const FlightCardContent = ({
               <div className="flex-1 border-t border-gray-300"></div>
               <div className="absolute left-0 -top-1 w-2 h-2 bg-gray-300 rounded-full"></div>
               <div className="absolute right-0 -top-1 w-2 h-2 bg-gray-300 rounded-full"></div>
-              {/* {flight.stops && flight.stops > 0 && (
-                <div className="absolute left-1/2 transform -translate-x-1/2 -top-1 w-2 h-2 bg-blue-600 rounded-full"></div>
-              )} */}
               <Icon
                 icon="material-symbols-light:flightsmode"
                 className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1 w-4 h-4 text-gray-800 bg-white"
@@ -120,30 +147,21 @@ export const FlightCardContent = ({
       )}
 
       {/* Action Row with Select Button */}
-      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+      <div className="flex items-center gap-2 justify-between pt-3 border-t border-gray-100">
         <div className="flex space-x-2">
-          <button className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
-            <Icon icon="heroicons:user" className="w-4 h-4" />
+          <button className="flex items-center gap-2 text-gray-600 hover:text-gray-600 p-1 border border-gray-300 rounded-sm">
+            <Icon icon="mdi:bag-suitcase-outline" className="w-4 h-4" />
+            <p className="text-sm text-gray-600">1</p>
           </button>
-          <button className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+          <button className="flex items-center gap-2 text-gray-600 hover:text-gray-600 p-1 border border-gray-300 rounded-sm">
             <Icon icon="heroicons:shield-check" className="w-4 h-4" />
-          </button>
-          <button className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
-            <Icon icon="heroicons:chart-bar" className="w-4 h-4" />
-          </button>
-          <button className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
-            <Icon icon="heroicons:arrow-uturn-left" className="w-4 h-4" />
+            <p className="text-sm text-gray-600">0</p>
           </button>
         </div>
         <Button
           onClick={onSelect}
           disabled={isLoading}
           variant="secondary"
-          // className={`px-6 py-2 rounded-md transition-colors text-sm text-white ${
-          //   isExpanded
-          //     ? "bg-green-600 hover:bg-green-700"
-          //     : "bg-blue-600 hover:bg-blue-700"
-          // } ${isLoading ? "opacity-75 cursor-not-allowed" : ""}`}
           className={`px-6 py-2 rounded-md transition-colors text-white w-full ${
             isLoading ? "opacity-75 cursor-not-allowed" : ""
           }`}

@@ -37,7 +37,7 @@ export const FlightCard = ({ flight }: FlightCardProps) => {
       }`}
     >
       <div
-        className={`bg-white rounded-lg shadow-sm transition-all duration-300 p-3 sm:p-6  ${
+        className={`bg-white rounded-lg shadow-sm transition-all duration-300  ${
           isExpanded ? "rounded-br-none rounded-bl-none" : ""
         }`}
       >

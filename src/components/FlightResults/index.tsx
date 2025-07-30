@@ -30,6 +30,7 @@ export const FlightResults = ({}: FlightResultsProps) => {
       flightNumber: "EK 511",
       aircraft: "Boeing 777-300ER",
       bookingClass: "Economy",
+      dealType: "Best",
       baggage: {
         checkedBaggage: "30kg",
         carryOn: "7kg",
@@ -61,6 +62,7 @@ export const FlightResults = ({}: FlightResultsProps) => {
       flightNumber: "LH 761 / LH 901",
       aircraft: "Airbus A340-600 / Boeing 747-8",
       bookingClass: "Economy",
+      dealType: "Cheapest",
       layoverTime: "2h 45m",
       stopDetails: [
         {
@@ -100,6 +102,7 @@ export const FlightResults = ({}: FlightResultsProps) => {
       to: "London Heathrow Airport (LHR)",
       travelDate: new Date("2025-08-15"),
       stops: 2,
+      dealType: "Recommended",
       price: 52340.8, // INR
       flightNumber: "AI 131 / AI 925 / AI 131",
       aircraft: "Boeing 787-8 / Airbus A320 / Boeing 777-200LR",
@@ -153,6 +156,7 @@ export const FlightResults = ({}: FlightResultsProps) => {
       travelDate: new Date("2025-08-15"),
       stops: null, // Direct flight
       price: 89250.75, // INR
+      dealType: "Cheapest",
       flightNumber: "BA 143",
       aircraft: "Boeing 787-9",
       bookingClass: "Premium Economy",
@@ -184,6 +188,7 @@ export const FlightResults = ({}: FlightResultsProps) => {
       to: "London Heathrow Airport (LHR)",
       travelDate: new Date("2025-08-15"),
       stops: 1,
+      dealType: "Recommended",
       price: 71890.4, // INR
       flightNumber: "QR 570 / QR 001",
       aircraft: "Airbus A350-900 / Boeing 777-300ER",
