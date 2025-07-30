@@ -96,7 +96,7 @@ const FormControl: React.FC = () => {
               images={scrollingImages}
               speed={30}
               direction="down"
-              className="h-full pr-4 lg:pr-8"
+              className="h-full"
             />
           </div>
         </div>

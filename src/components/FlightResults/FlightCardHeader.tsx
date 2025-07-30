@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { formatDate } from "../../services/globalServices";
 import type { Flight } from "../../types";
 import Button from "../common/Button";
@@ -10,12 +11,31 @@ interface FlightCardHeaderProps {
   onSelect: () => void;
 }
 
+export const getStatusColor = (dealType: string) => {
+  switch (dealType) {
+    case "Best":
+      return "bg-blue-100 text-blue-400";
+      break;
+    case "Recommended":
+      return "bg-yellow-100 text-yellow-400";
+      break;
+    case "Cheapest":
+      return "bg-green-100 text-green-400";
+      break;
+    default:
+      return "bg-blue-100 text-blue-400";
+      break;
+  }
+};
+
 export const FlightCardHeader = ({
   flight,
   isExpanded,
   isLoading,
   onSelect,
 }: FlightCardHeaderProps) => {
+  const [save, setSave] = useState(false);
+
   // Helper function to display stops information
   const getStopsDisplay = () => {
     if (!flight.stops || flight.stops === 0) {
@@ -48,58 +68,91 @@ export const FlightCardHeader = ({
   return (
     /* Desktop Layout */
     <div className="hidden lg:flex flex-col space-y-8">
-      {/* Top Card header */}
-      <div>
-        <h4 className="font-semibold">
-          {formatDate(new Date(flight.travelDate))}
-        </h4>
-        <div className="flex items-center gap-2">
-          <p>{flight.from}</p>
-          <Icon icon="proicons:arrow-left" rotate={90} width={18} height={18} />
-          <p>{flight.to}</p>
-        </div>
-      </div>
-
-      <div className="flex gap-6">
-        <div className="flex items-center justify-between space-x-8 w-5/6">
-          <div className="flex items-center gap-4">
-            <div className="w-28 h-12 flex items-center justify-center">
-              <img
-                src={flight.logo}
-                alt={`${flight.airline} logo`}
-                className="w-full h-full object-contain"
-              />
+      <div className="flex">
+        <div className="flex  p-3 sm:p-6 flex-col w-5/6">
+          <div className="flex items-center justify-between">
+            <div
+              onClick={() => setSave(save ? false : true)}
+              className="flex rounded-sm items-center select-none justify-between border border-gray-200 px-2 py-1 w-fit gap-2 hover:border-gray-300 cursor-pointer"
+            >
+              <Icon icon={save ? "mdi:heart" : "mdi:heart-outline"}></Icon>
+              <h6 className="text-sm">Save</h6>
             </div>
-            <div>
-              <div className="font-medium text-sm">{flight.airline}</div>
-              <div className="text-xs text-gray-500">
-                {flight.layoverTime || flight.totalLayoverTime}
+            <div
+              className={`flex rounded-sm items-center select-none justify-between px-2 py-1 w-fit gap-2 ${getStatusColor(
+                flight.dealType
+              )}`}
+            >
+              <h4 className="font-semibold text-sm">{flight.dealType}</h4>
+            </div>
+          </div>
+          <div className="flex my-auto items-center justify-between space-x-8 w-full">
+            <div className="flex items-center gap-4">
+              <div className="w-28 h-12 flex items-center justify-center">
+                <img
+                  src={flight.logo}
+                  alt={`${flight.airline} logo`}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <div className="text-center flex gap-2 items-center">
+                  <div className="font-semibold text-lg">
+                    {flight.departure}
+                  </div>
+                  <span>-</span>
+                  <div className="font-semibold text-lg">{flight.arrival}</div>
+                </div>
+                <div className="font-medium text-gray-400 text-sm">
+                  {flight.airline}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="text-center flex gap-2 items-center">
-            <div className="font-semibold text-lg">{flight.departure}</div>
-            <span>-</span>
-            <div className="font-semibold text-lg">{flight.arrival}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-xs text-gray-500">{getStopsDisplay()}</div>
-            <div className="text-xs text-blue-600">{flight.route}</div>
-            {getStopInfo() && (
-              <div className="text-xs text-gray-500 mt-1">{getStopInfo()}</div>
-            )}
-          </div>
-          <div className="text-center">
-            <div className="font-semibold text-lg">{flight.duration}</div>
+            <div className="text-center">
+              <div className="font-semibold text-lg">{getStopsDisplay()}</div>
+              {/* <div className="text-xs text-blue-600">{flight.route}</div> */}
+              {getStopInfo() && (
+                <div className="font-medium text-gray-400 text-sm">
+                  {getStopInfo()}
+                </div>
+              )}
+            </div>
+            <div className="text-center">
+              <div className="font-semibold text-lg">{flight.duration}</div>
+              <div className="font-medium text-gray-400 text-sm">
+                {flight.route}
+              </div>
+            </div>
           </div>
 
           {/* price card */}
         </div>
-        <div className="border border-gray-200 rounded-lg p-3 w-1/6">
+        <div className="border-l border-gray-200 p-3 sm:p-6 w-1/6">
+          <div className="flex space-x-2 mb-2">
+            <button className="flex items-center gap-2 text-gray-600 hover:text-gray-600 p-1 border border-gray-300 rounded-sm">
+              <Icon icon="mdi:bag-suitcase-outline" className="w-4 h-4" />
+              <p className="text-sm text-gray-600">1</p>
+            </button>
+            <button className="flex items-center gap-2 text-gray-600 hover:text-gray-600 p-1 border border-gray-300 rounded-sm">
+              <Icon icon="heroicons:shield-check" className="w-4 h-4" />
+              <p className="text-sm text-gray-600">0</p>
+            </button>
+          </div>
           <div className="text-2xl font-bold text-gray-900">
             ${flight.price}
           </div>
-          <div className="text-sm text-gray-500 mb-3">Value</div>
+          <div className="text-sm text-gray-500">
+            {flight.dealType === "Best" && "Basic Economy"}
+          </div>
+          <div className="text-sm text-gray-500 mb-3">
+            {flight.dealType === "Best" && "Main Cabin"}
+          </div>
+          <div className="text-sm text-gray-500 mb-3">
+            {flight.dealType === "Recommended" && "Basic Premium"}
+          </div>
+          <div className="text-sm text-gray-500 mb-3">
+            {flight.dealType === "Cheapest" && "Value"}
+          </div>
           <Button
             variant="secondary"
             onClick={onSelect}
@@ -110,20 +163,6 @@ export const FlightCardHeader = ({
           >
             {isLoading ? "Loading..." : isExpanded ? "Selected" : "Select"}
           </Button>
-          <div className="flex justify-center space-x-2 mt-2">
-            <button className="text-gray-400 hover:text-gray-600 p-1">
-              <Icon icon="heroicons:user" className="w-4 h-4" />
-            </button>
-            <button className="text-gray-400 hover:text-gray-600 p-1">
-              <Icon icon="heroicons:shield-check" className="w-4 h-4" />
-            </button>
-            <button className="text-gray-400 hover:text-gray-600 p-1">
-              <Icon icon="heroicons:chart-bar" className="w-4 h-4" />
-            </button>
-            <button className="text-gray-400 hover:text-gray-600 p-1">
-              <Icon icon="heroicons:arrow-uturn-left" className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </div>
     </div>
