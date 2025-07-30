@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { formatDate } from "../../services/globalServices";
 import type { Flight } from "../../types";
 import Button from "../common/Button";
 import { Icon } from "@iconify/react";
