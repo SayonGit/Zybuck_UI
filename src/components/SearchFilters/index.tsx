@@ -1,5 +1,6 @@
 // components/SearchFilters.tsx
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Icon } from "@iconify/react";
 import { FilterSection } from "./FilterSection";
 import { TripsFilter } from "./TripsFilter";
@@ -7,12 +8,21 @@ import { AirportsFilter } from "./AirportsFilter";
 import { FlightNumberFilter } from "./FlightNumberFilter";
 import { FAQsFilter } from "./FAQsFilter";
 import styles from "./index.module.scss";
+import type { AirlineNamedLogo } from "@/staticData/currencySigns";
+import { useSearchParams } from "react-router-dom";
 
 interface SearchFiltersProps {
   searchType: string;
+  airlines?: AirlineNamedLogo[];
+  selectedAirlines?: string[];
+  setSelectedAirlines?: Dispatch<SetStateAction<string[]>>;
 }
 
-export const SearchFilters = ({}: SearchFiltersProps) => {
+export const SearchFilters = ({
+  airlines,
+  selectedAirlines,
+  setSelectedAirlines,
+}: SearchFiltersProps) => {
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
   >({
@@ -33,8 +43,7 @@ export const SearchFilters = ({}: SearchFiltersProps) => {
     0, 24,
   ]);
   const [arrivalRange, setArrivalRange] = useState<[number, number]>([0, 24]);
-  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
-
+  const [searchParams] = useSearchParams();
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({
       ...prev,
@@ -47,7 +56,7 @@ export const SearchFilters = ({}: SearchFiltersProps) => {
   };
 
   const handleAirlineToggle = (airline: string) => {
-    setSelectedAirlines((prev) =>
+    setSelectedAirlines!((prev) =>
       prev.includes(airline)
         ? prev.filter((a) => a !== airline)
         : [...prev, airline]
@@ -63,7 +72,7 @@ export const SearchFilters = ({}: SearchFiltersProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 sticky top-4">
       <div className="p-3 sm:p-4 border-b border-gray-200">
         <h3 className="font-semibold text-gray-900 text-base sm:text-lg">
           Filters
@@ -115,7 +124,11 @@ export const SearchFilters = ({}: SearchFiltersProps) => {
 
         {/* 2. Route Filter */}
         <FilterSection
-          title="New Delhi → London, UK"
+          title={
+            searchParams.get("from") && searchParams.get("to")
+              ? `${searchParams.get("from")} → ${searchParams.get("to")}`
+              : "Route"
+          }
           isExpanded={expandedSections.route}
           onToggle={() => toggleSection("route")}
         >
@@ -222,24 +235,22 @@ export const SearchFilters = ({}: SearchFiltersProps) => {
           onToggle={() => toggleSection("airlines")}
         >
           <div className="space-y-2">
-            {["American Airlines", "Air India", "Air Canada", "Indigo"].map(
-              (airline) => (
-                <label
-                  key={airline}
-                  className="flex items-center cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedAirlines.includes(airline)}
-                    onChange={() => handleAirlineToggle(airline)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
-                  />
-                  <span className="ml-2 text-xs sm:text-sm text-gray-700">
-                    {airline}
-                  </span>
-                </label>
-              )
-            )}
+            {airlines!.map((airline) => (
+              <label
+                key={airline.iata}
+                className="flex items-center cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedAirlines!.includes(airline.iata)}
+                  onChange={() => handleAirlineToggle(airline.iata)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                />
+                <span className="ml-2 text-xs sm:text-sm text-gray-700">
+                  {airline.name}
+                </span>
+              </label>
+            ))}
           </div>
         </FilterSection>
 
@@ -286,7 +297,7 @@ export const SearchFilters = ({}: SearchFiltersProps) => {
               setSelectedStop("all");
               setDepartureRange([0, 24]);
               setArrivalRange([0, 24]);
-              setSelectedAirlines([]);
+              setSelectedAirlines!([]);
             }}
             className="w-full px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           >

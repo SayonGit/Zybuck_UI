@@ -1,13 +1,18 @@
 // components/SearchFilters/TripsFilter.tsx
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import { useSearchParams } from "react-router-dom";
 
 export const TripsFilter = () => {
-  const [selectedTrip, setSelectedTrip] = useState<string>("roundtrip");
+  const [searchParams] = useSearchParams();
+  const returnDate = searchParams.get("returnDate")?.toString() || "";
+  const [selectedTrip, setSelectedTrip] = useState<string>(
+    returnDate ? "roundtrip" : "oneway"
+  );
 
   const tripOptions = [
-    { id: "roundtrip", label: "Round trip", icon: "heroicons:arrow-path" },
     { id: "oneway", label: "One way", icon: "heroicons:arrow-right" },
+    { id: "roundtrip", label: "Round trip", icon: "heroicons:arrow-path" },
     { id: "multicity", label: "Multi-city", icon: "heroicons:map" },
   ];
 

@@ -22,3 +22,22 @@
     }
   }
 }
+
+@media (max-width: 640px) {
+  .absolute.right-0.top-20 {
+    width: calc(100vw - 2rem);
+    margin: 0 1rem;
+    animation: slideDown 0.2s ease-out;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

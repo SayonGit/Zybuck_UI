@@ -8,6 +8,10 @@ export const useNavigation = () => {
   const goToDashboard = () => navigate("/dashboard");
   const goToAbout = () => navigate("/about");
   const goToContact = () => navigate("/contact");
+  const goToSearch = (query: URLSearchParams) =>
+    navigate("/search?" + query.toString());
+  const goToCheckout = (query: URLSearchParams) =>
+    navigate("/checkout?" + query.toString());
   const goToDetails = (id: string) => navigate(`/details/${id}`);
   const goBack = () => navigate(-1);
   const goForward = () => navigate(1);
@@ -30,5 +34,7 @@ export const useNavigation = () => {
     isCurrentPath,
     isHomePage,
     isDetailsPage,
+    goToSearch,
+    goToCheckout,
   };
 };

@@ -1,19 +1,28 @@
+import type { Flight } from "@/types";
 import { FlightResults } from "../FlightResults";
 
 interface SearchResultsProps {
   searchType: string;
   sortBy: string;
   searchParams: URLSearchParams;
+  flightData: Flight[] | undefined;
 }
 
 export const SearchResults = ({
   searchType,
   sortBy,
   searchParams,
+  flightData,
 }: SearchResultsProps) => {
   switch (searchType) {
     case "flight":
-      return <FlightResults sortBy={sortBy} searchParams={searchParams} />;
+      return (
+        <FlightResults
+          sortBy={sortBy}
+          searchParams={searchParams}
+          flightData={flightData!}
+        />
+      );
     case "hotel":
       return (
         <div className="bg-white rounded-lg p-3 sm:p-6">

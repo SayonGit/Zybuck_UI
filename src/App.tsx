@@ -7,6 +7,7 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import SearchPage from "./pages/SearchPage";
 import { LoadingProvider } from "./context/LoadingContext";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="details/:id" element={<DetailsPage />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="/checkout" element={<Checkout />} />
             {/* Catch all unmatched routes within the layout */}
             <Route path="*" element={<NotFound />} />
           </Route>

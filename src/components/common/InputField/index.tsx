@@ -46,7 +46,7 @@ const InputField: React.FC<InputFieldProps> = ({
         required={required}
         min={min}
         max={max}
-        className="w-full p-0 border-none focus:outline-none focus:ring-0 font-semibold text-gray-800 placeholder:text-gray-400"
+        className="w-full p-0 border-none focus:outline-none focus:ring-0 font-semibold text-gray-800 placeholder:text-gray-400 truncate text-ellipsis overflow-hidden whitespace-nowrap"
       />
     </div>
   );
