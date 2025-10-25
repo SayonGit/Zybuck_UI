@@ -1,26 +1,53 @@
+import type { SortKey } from "@/pages/SearchPage";
+import type { Flight } from "@/types";
 import { Icon } from "@iconify/react";
 
 interface SortingTabsProps {
   sortBy: string;
-  setSortBy: (sort: string) => void;
+  setSortBy: (sort: SortKey) => void;
   isLoading: boolean;
+  totalData: Flight[];
+  bestData: Flight;
+  recommendationData: Flight;
+  cheapestData: Flight;
+  quickestData: Flight;
 }
 
 export const SortingTabs = ({
   sortBy,
   setSortBy,
   isLoading,
+  totalData,
+  bestData,
+  recommendationData,
+  cheapestData,
+  quickestData,
 }: SortingTabsProps) => {
   const tabs = [
     {
       id: "recommended",
       label: "Recommended",
-      price: "$99",
-      duration: "3h 02m",
+      price: recommendationData?.price,
+      duration: recommendationData?.duration,
     },
-    { id: "cheapest", label: "Cheapest", price: "$99", duration: "2h 18m" },
-    { id: "best", label: "Best", price: "$99", duration: "2h 18m" },
-    { id: "quickest", label: "Quickest", price: "$99", duration: "2h 18m" },
+    {
+      id: "cheapest",
+      label: "Cheapest",
+      price: cheapestData?.price,
+      duration: cheapestData?.duration,
+    },
+    {
+      id: "best",
+      label: "Best",
+      price: bestData?.price,
+      duration: bestData?.duration,
+    },
+    {
+      id: "quickest",
+      label: "Quickest",
+      price: quickestData?.price,
+      duration: quickestData?.duration,
+    },
   ];
 
   if (isLoading) {
@@ -46,7 +73,7 @@ export const SortingTabs = ({
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setSortBy(tab.id)}
+            onClick={() => setSortBy(tab.id as SortKey)}
             className={`flex-1 min-w-0 p-2 sm:p-4 text-center transition-colors relative ${
               sortBy === tab.id
                 ? "text-blue-600 bg-blue-50"
@@ -71,7 +98,8 @@ export const SortingTabs = ({
 
       <div className="p-2 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
         <div className="text-xs sm:text-sm text-gray-600">
-          Showing <span className="font-medium">4 of 257 places</span>
+          Showing{" "}
+          <span className="font-medium"> {totalData?.length} result</span>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-4">
           <button className="flex items-center text-xs sm:text-sm text-gray-600 hover:text-gray-900">

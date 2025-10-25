@@ -10,25 +10,51 @@ import { SortingTabs } from "../../components/SortingTabs";
 import { SearchResults } from "../../components/SearchResult";
 import { SearchFilters } from "../../components/SearchFilters";
 import { Icon } from "@iconify/react";
+import useFlightOffers from "./useFlightSearch";
+import { getAllAirlines, transformFlightOffers } from "./transformFlightOffers";
+import type { Flight } from "@/types";
+
+export type SortKey = "recommended" | "cheapest" | "quickest" | "best";
 
 const SearchPage = () => {
+  const { data, loading: isLoading, fetchFlightOffers } = useFlightOffers();
   const [searchParams] = useSearchParams();
-  const [isLoading, setIsLoading] = useState(true);
   const [searchType, setSearchType] = useState<string>("flight");
-  const [sortBy, setSortBy] = useState<string>("recommended");
+  const [sortBy, setSortBy] = useState<SortKey>("recommended");
+  const transformed = transformFlightOffers(data) as {
+    recommended: Flight[];
+    cheapest: Flight[];
+    quickest: Flight[];
+    best: Flight[];
+  };
+  const flightResult = transformed[sortBy] ?? [];
   const [showFilters, setShowFilters] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [searchParams]);
+  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
 
   useEffect(() => {
     setSearchType(getSearchTypeFromParams(searchParams));
+    const fromParam = searchParams.get("from")?.toString() || "";
+    const toParam = searchParams.get("to")?.toString() || "";
+    const departureDate = searchParams.get("departDate")?.toString() || "";
+    const returnDate = searchParams.get("returnDate")?.toString() || "";
+    const adultsCnt = searchParams.get("adults")?.toString() || "";
+    const children = searchParams.get("children")?.toString() || "";
+    const infants = searchParams.get("infants")?.toString() || "";
+    const travelClass = searchParams.get("class")?.toString() || "";
+    // Extract text inside parentheses (e.g., "CODE")
+    const fromCode = fromParam.match(/\(([^)]+)\)/)?.[1] || "";
+    const toCode = toParam.match(/\(([^)]+)\)/)?.[1] || "";
+
+    fetchFlightOffers({
+      fromCode: fromCode,
+      toCode: toCode,
+      departureDate: departureDate,
+      returnDate: returnDate,
+      adultsCnt: adultsCnt ? parseInt(adultsCnt) : 1,
+      class: travelClass.toUpperCase() || "ECONOMY",
+      children: children ? parseInt(children) : 0,
+      infants: infants ? parseInt(infants) : 0,
+    });
   }, [searchParams]);
 
   return (
@@ -76,7 +102,12 @@ const SearchPage = () => {
                   <SkeletonFilter />
                 </div>
               ) : (
-                <SearchFilters searchType={searchType} />
+                <SearchFilters
+                  searchType={searchType}
+                  airlines={getAllAirlines(data)}
+                  selectedAirlines={selectedAirlines}
+                  setSelectedAirlines={setSelectedAirlines}
+                />
               )}
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
@@ -102,7 +133,12 @@ const SearchPage = () => {
               <SkeletonFilter />
             </div>
           ) : (
-            <SearchFilters searchType={searchType} />
+            <SearchFilters
+              searchType={searchType}
+              airlines={getAllAirlines(data)}
+              selectedAirlines={selectedAirlines}
+              setSelectedAirlines={setSelectedAirlines}
+            />
           )}
         </div>
 
@@ -113,6 +149,11 @@ const SearchPage = () => {
             sortBy={sortBy}
             setSortBy={setSortBy}
             isLoading={isLoading}
+            totalData={flightResult}
+            bestData={transformed.best[0]}
+            recommendationData={transformed.recommended[0]}
+            cheapestData={transformed.cheapest[0]}
+            quickestData={transformed.quickest[0]}
           />
 
           {/* Search Results */}
@@ -123,6 +164,7 @@ const SearchPage = () => {
               searchType={searchType}
               sortBy={sortBy}
               searchParams={searchParams}
+              flightData={flightResult}
             />
           )}
         </div>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import FlightDealCard from "./FlightDealCard";
 import { useAppData } from "../../hooks/useAppData";
+import { SWIPE_THRESHOLD } from "../../utils/constants";
 
 interface FlightDeal {
   id: string;
@@ -21,7 +22,8 @@ const FlightDealsCarousel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"international" | "domestic">(
     "international"
   );
-
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
   // Get flight deals from Redux store
   const { flightDeals } = useAppData();
 
@@ -109,6 +111,30 @@ const FlightDealsCarousel: React.FC = () => {
     setActiveTab(tab);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsAutoPlaying(false);
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current !== null && touchEndX.current !== null) {
+      const distance = touchEndX.current - touchStartX.current;
+      if (Math.abs(distance) > SWIPE_THRESHOLD) {
+        if (distance > 0) {
+          goToPrev();
+        } else {
+          goToNext();
+        }
+      }
+    }
+    setIsAutoPlaying(true);
+  };
+
   return (
     <section className="w-full my-12 bg-gray-50">
       <div className="w-full px-4 sm:px-0 lg:px-0">
@@ -160,6 +186,9 @@ const FlightDealsCarousel: React.FC = () => {
           className="relative w-full"
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Navigation Buttons */}
           {maxIndex > 0 && (

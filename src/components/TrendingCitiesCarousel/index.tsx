@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import TrendingCities from "./TrendingCitiesCard";
 import { useAppData } from "../../hooks/useAppData";
+import { SWIPE_THRESHOLD } from "../../utils/constants";
 
 interface TrendingCities {
   id: string;
@@ -18,7 +19,8 @@ interface TrendingCities {
 const TrendingCitiesCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
   // Get trending cities from Redux store
   const { trendingCities } = useAppData();
 
@@ -66,7 +68,6 @@ const TrendingCitiesCarousel: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Auto-play functionality
   useEffect(() => {
     if (!isAutoPlaying) return;
 
@@ -85,6 +86,30 @@ const TrendingCitiesCarousel: React.FC = () => {
 
   const goToPrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex <= 0 ? maxIndex : prevIndex - 1));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsAutoPlaying(false);
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current !== null && touchEndX.current !== null) {
+      const distance = touchEndX.current - touchStartX.current;
+      if (Math.abs(distance) > SWIPE_THRESHOLD) {
+        if (distance > 0) {
+          goToPrev();
+        } else {
+          goToNext();
+        }
+      }
+    }
+    setIsAutoPlaying(true);
   };
 
   return (
@@ -110,6 +135,9 @@ const TrendingCitiesCarousel: React.FC = () => {
           className="relative w-full"
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Navigation Buttons */}
           {maxIndex > 0 && (

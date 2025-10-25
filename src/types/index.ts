@@ -17,15 +17,106 @@ export interface ServiceFeature {
   description: string;
   stats?: string;
 }
-
 export interface StopDetail {
-  stopNumber: number;
   airport: string;
-  city: string;
+  duration: string;
   arrivalTime: string;
   departureTime: string;
-  layoverDuration: string;
-  terminal: string;
+}
+
+export interface Baggage {
+  cabin: string;
+  checkin: string;
+}
+export interface Flight {
+  id: number;
+  airline: string;
+  logo?: string;
+  route: string;
+  departure: string;
+  arrival: string;
+  duration: string;
+  durationMinutes: number;
+
+  from: string;
+  to: string;
+  travelDate: string;
+
+  stops: number;
+  stopDetails: StopDetail[];
+
+  price: string;
+  priceDetails: PriceDetails;
+
+  flightNumber: string;
+  aircraft: string;
+  bookingClass: string;
+  dealType: string;
+
+  baggage: Baggage;
+  amenities: Amenities;
+  seatConfiguration: string;
+
+  totalLayoverTime?: string;
+
+  roundTrip?: Flight | null;
+}
+
+export interface StopDetail {
+  leg: string;
+  departureTime: string;
+  arrivalTime: string;
+  duration: string;
+  departureAirport: string;
+  arrivalAirport: string;
+  carrierCode: string;
+  flightNumber: string;
+  terminal: {
+    departure?: string;
+    arrival?: string;
+  };
+  segmentIndex: number;
+}
+
+export interface PriceDetails {
+  currency: string;
+  base: number;
+  total: number;
+  grandTotal: number;
+  travelerPricings: TravelerPricing[];
+}
+
+export interface TravelerPricing {
+  travelerId: string;
+  fareOption: string;
+  travelerType: string;
+  price: {
+    currency: string;
+    total: string;
+    base: string;
+  };
+  fareDetailsBySegment: FareDetailsBySegment[];
+}
+
+export interface FareDetailsBySegment {
+  segmentId: string;
+  cabin: string;
+  fareBasis: string;
+  brandedFare: string;
+  brandedFareLabel: string;
+  class: string;
+  includedCheckedBags: { quantity: number };
+  includedCabinBags: { quantity: number };
+  amenities: FareAmenity[];
+}
+
+export interface FareAmenity {
+  description: string;
+  isChargeable: boolean;
+  amenityType: string;
+  amenityProvider: {
+    name: string;
+  };
 }
 
 export interface Baggage {
@@ -41,31 +132,4 @@ export interface Amenities {
   streaming: boolean;
   snacks: boolean;
   blanket: boolean;
-  priorityBoarding?: boolean;
-  amenityKit?: boolean;
-}
-
-export interface Flight {
-  id: number;
-  airline: string;
-  logo: any;
-  departure: string;
-  arrival: string;
-  duration: string;
-  route: string;
-  from: string;
-  to: string;
-  travelDate: Date;
-  stops: number | null;
-  price: number;
-  flightNumber: string;
-  dealType: string;
-  aircraft: string;
-  bookingClass: string;
-  layoverTime?: string;
-  totalLayoverTime?: string;
-  stopDetails?: StopDetail[];
-  baggage: Baggage;
-  amenities: Amenities;
-  seatConfiguration: string;
 }

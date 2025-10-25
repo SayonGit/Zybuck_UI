@@ -28,11 +28,11 @@ interface FlightSearchState {
 
 const initialState: FlightSearchState = {
   formData: {
-    from: "Indira Gandhi - New Delhi",
-    to: "London City Airport, UK",
-    departDate: "2024-06-24",
-    adults: 2,
-    children: 1,
+    from: "",
+    to: "",
+    departDate: new Date().toISOString().split("T")[0],
+    adults: 1,
+    children: 0,
     infants: 0,
     tripType: "oneWay",
     class: "economy",

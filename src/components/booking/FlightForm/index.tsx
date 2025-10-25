@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "../../../store/hooks";
 import {
   updateFormData,
@@ -20,37 +20,67 @@ import { useAppData } from "../../../hooks/useAppData";
 const FlightForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { formData, selectedTrip, selectedAirline, isLoading } =
     UseFlightForm();
-
-  // Get data from Redux store
   const { flightClassOptions, airlineOptions } = useAppData();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.size === 0) return;
+    const from = params.get("from") || "";
+    const to = params.get("to") || "";
+    const departDate = params.get("departDate") || "";
+    const returnDate = params.get("returnDate") || "";
+    const adults = Number(params.get("adults")) || 1;
+    const children = Number(params.get("children")) || 0;
+    const infants = Number(params.get("infants")) || 0;
+    const tripType =
+      (params.get("tripType") as TripOption) || TripOption.oneWay;
+    const flightClass = params.get("class") || "Economy";
+    const airline = params.get("airline") || "";
+
+    // Update Redux with URL data
+    dispatch(
+      updateFormData({
+        from,
+        to,
+        departDate,
+        returnDate,
+        adults,
+        children,
+        infants,
+        class: flightClass as any,
+      })
+    );
+    dispatch(updateSelectedTrip(tripType));
+    dispatch(updateSelectedAirline(airline));
+  }, [location.search, dispatch]);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(setLoading(true));
 
-    // Create URL search parameters from form data
-    const searchParams = new URLSearchParams();
+    const searchParams = new URLSearchParams({
+      from: formData.from || "",
+      to: formData.to || "",
+      departDate: formData.departDate || "",
+      adults: formData.adults.toString(),
+      children: formData.children.toString(),
+      infants: formData.infants.toString(),
+      tripType: selectedTrip,
+      class: formData.class,
+      airline: selectedAirline,
+    });
 
-    // Add form data to search parameters
-    searchParams.set("from", formData.from || "");
-    searchParams.set("to", formData.to || "");
-    searchParams.set("departDate", formData.departDate || "");
-    if (formData.returnDate) {
+    if (formData.returnDate && selectedTrip === TripOption.roundTrip) {
       searchParams.set("returnDate", formData.returnDate);
+    } else {
+      searchParams.delete("returnDate");
     }
-    searchParams.set("adults", formData.adults.toString());
-    searchParams.set("children", formData.children.toString());
-    searchParams.set("infants", formData.infants.toString());
-    searchParams.set("tripType", selectedTrip);
-    searchParams.set("class", formData.class);
-    searchParams.set("airline", selectedAirline);
 
-    // Navigate to search page with query parameters
     navigate(`/search?${searchParams.toString()}`);
 
-    // Reset loading state after a short delay
     setTimeout(() => {
       dispatch(setLoading(false));
     }, 1000);
@@ -79,7 +109,6 @@ const FlightForm: React.FC = () => {
 
       {/* Class Selection and Actions */}
       <div className="flex flex-col md:flex-row gap-2">
-        {/* Class Selection */}
         <div className="w-full md:w-[64%]">
           <div className="grid grid-cols-2 md:grid-cols-4 rounded-lg border b-clr overflow-hidden">
             {flightClassOptions.map((option, index) => (
@@ -95,13 +124,13 @@ const FlightForm: React.FC = () => {
                   ${index === 1 ? "border-r border-r-[#D2D2D2]" : ""}
                   ${index === 2 && "md:border-r md:border-r-[#D2D2D2]"}
                 `}
-                onClick={() =>
+                onClick={() => {
                   dispatch(
                     updateFormData({
                       class: option.value as any,
                     })
-                  )
-                }
+                  );
+                }}
               >
                 <span
                   className={
@@ -117,7 +146,7 @@ const FlightForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Airline and Search Button */}
+        {/* Airline + Search */}
         <div className="flex flex-col md:flex-row md:w-[36%] gap-2 items-end">
           <div className="w-full md:w-[50%] md:flex-1 max-w-sm">
             <DropdownField

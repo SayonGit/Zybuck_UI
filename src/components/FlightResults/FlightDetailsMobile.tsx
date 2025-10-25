@@ -83,7 +83,7 @@ export const FlightDetailsMobile = ({ flight }: FlightDetailsMobileProps) => {
         </div>
 
         {/* Mobile Flight Path */}
-        <div
+        {/* <div
           className={`flex gap-3 items-center ${styles["internal-card-height-sm"]}`}
         >
           <div className="relative items-center flex flex-col flex-shrink-0">
@@ -120,21 +120,22 @@ export const FlightDetailsMobile = ({ flight }: FlightDetailsMobileProps) => {
           </div>
         </div>
 
-        {/* Mobile Amenities */}
         <div className="bg-gray-100 p-3 rounded-xl">
           <div className="space-y-2">{renderAmenities()}</div>
-        </div>
+        </div> */}
 
         {/* Mobile Layover Sections */}
         {flight.stopDetails && flight.stopDetails.length > 0 && (
           <div className="space-y-3">
             {flight.stopDetails.map((stop, index) => (
-              <div key={index} className="border-t pt-3">
+              <div key={index} className={`pt-3 ${index !== 0 && "border-t"}`}>
                 <div className="flex justify-between items-center mb-2">
                   <h5 className="font-medium text-gray-600 text-sm">
-                    Layover {stop.stopNumber} • {stop.layoverDuration}
+                    Layover {stop.segmentIndex} • {stop.duration}
                   </h5>
-                  <span className="text-xs text-gray-500">{stop.terminal}</span>
+                  <span className="text-xs text-gray-500">
+                    {stop.terminal.departure}
+                  </span>
                 </div>
                 <div
                   className={`flex gap-3 items-center ${styles["internal-card-height-sm"]}`}
@@ -164,15 +165,20 @@ export const FlightDetailsMobile = ({ flight }: FlightDetailsMobileProps) => {
                       </h4>
                     </div>
                     <h5 className="font-normal text-gray-400 text-xs">
-                      {stop.layoverDuration}
+                      {stop.duration}
                     </h5>
                     <div>
                       <h4 className="font-semibold text-sm">
                         {stop.departureTime} •{" "}
-                        <span className="font-normal text-xs">{stop.city}</span>
+                        <span className="font-normal text-xs">
+                          {stop.departureAirport}
+                        </span>
                       </h4>
                     </div>
                   </div>
+                </div>
+                <div className="bg-gray-100 p-3 rounded-xl">
+                  <div className="space-y-2">{renderAmenities()}</div>
                 </div>
               </div>
             ))}
