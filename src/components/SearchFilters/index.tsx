@@ -255,31 +255,31 @@ export const SearchFilters = ({
         </FilterSection>
 
         {/* 6. Trips Filter */}
-        <FilterSection
+        {/* <FilterSection
           title="Trips"
           isExpanded={expandedSections.trips}
           onToggle={() => toggleSection("trips")}
         >
           <TripsFilter />
-        </FilterSection>
+        </FilterSection> */}
 
         {/* 7. Airports Filter */}
-        <FilterSection
+        {/* <FilterSection
           title="Airports"
           isExpanded={expandedSections.airports}
           onToggle={() => toggleSection("airports")}
         >
           <AirportsFilter />
-        </FilterSection>
+        </FilterSection> */}
 
         {/* 8. Flight Number Filter */}
-        <FilterSection
+        {/* <FilterSection
           title="Flight Number"
           isExpanded={expandedSections.flightNumber}
           onToggle={() => toggleSection("flightNumber")}
         >
           <FlightNumberFilter />
-        </FilterSection>
+        </FilterSection> */}
 
         {/* 9. FAQs Filter */}
         <FilterSection
