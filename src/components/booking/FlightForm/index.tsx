@@ -16,6 +16,7 @@ import PassengerCounters from "./PassengerCounters";
 import SingleTripForm from "./SingleTripForm";
 import MultipleDestinationForm from "./MultipleDestinationForm";
 import { useAppData } from "../../../hooks/useAppData";
+import { toast } from "react-toastify";
 
 const FlightForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -59,6 +60,27 @@ const FlightForm: React.FC = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.from) {
+      toast.error("Please select the 'From' location.");
+      return;
+    }
+
+    if (!formData.to) {
+      toast.error("Please select the 'To' location.");
+      return;
+    }
+
+    if (!formData.departDate) {
+      toast.error("Please select a 'Departure Date'.");
+      return;
+    }
+
+    if (selectedTrip === TripOption.roundTrip && !formData.returnDate) {
+      toast.error("Please select a 'Return Date' for a round trip.");
+      return;
+    }
+
     dispatch(setLoading(true));
 
     const searchParams = new URLSearchParams({
@@ -81,9 +103,7 @@ const FlightForm: React.FC = () => {
 
     navigate(`/search?${searchParams.toString()}`);
 
-    setTimeout(() => {
-      dispatch(setLoading(false));
-    }, 1000);
+    dispatch(setLoading(false));
   };
 
   return (

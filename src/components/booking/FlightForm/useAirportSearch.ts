@@ -9,7 +9,7 @@ export interface AirportSuggestion {
   country: string;
 }
 
-export const useAirportSearch = () => {
+export const useAirportSearch = (skipAirport: string) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<AirportSuggestion[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,12 @@ export const useAirportSearch = () => {
           country: item.address.countryName,
         })
       );
-      setSuggestions(allSuggestions);
+      setSuggestions(
+        allSuggestions.filter(
+          (item) =>
+            item.airportCode !== skipAirport.match(/\(([^)]+)\)/)?.[1] || ""
+        )
+      );
     } catch (err) {
       console.error("Airport search failed:", err);
     } finally {

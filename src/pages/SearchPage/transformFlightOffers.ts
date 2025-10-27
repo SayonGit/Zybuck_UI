@@ -55,6 +55,7 @@ export const transformFlightOffers = (response: any) => {
       };
 
       const travelDate = new Date(firstSegment?.departure?.at);
+      const arrivalDate = new Date(lastSegment?.arrival?.at);
       const flightNumber = firstItinerary.segments
         .map((seg: any) => `${seg.carrierCode} ${seg.number}`)
         .join(" / ");
@@ -161,6 +162,7 @@ export const transformFlightOffers = (response: any) => {
         amenities,
         seatConfiguration: "3-3-3",
         roundTrip: returnDetails,
+        arrivalDate,
       };
     })
     .filter(Boolean);

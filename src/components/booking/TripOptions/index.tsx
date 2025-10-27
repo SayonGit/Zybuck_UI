@@ -13,7 +13,11 @@ const TripOptions: React.FC<TripOptionsProps> = ({
   const options = [
     { id: TripOption.oneWay, label: "One way" },
     { id: TripOption.roundTrip, label: "Round Trip" },
-    { id: TripOption.multipleDestination, label: "Multiple Destination" },
+    {
+      id: TripOption.multipleDestination,
+      label: "Multiple Destination",
+      disabled: true,
+    },
   ];
 
   return (
@@ -33,6 +37,7 @@ const TripOptions: React.FC<TripOptionsProps> = ({
                 name="tripType"
                 value={option.id}
                 checked={selectedTrip === option.id}
+                disabled={option.disabled}
                 onChange={(e) => onTripChange(e.target.value as TripOption)}
                 className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500"
               />

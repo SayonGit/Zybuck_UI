@@ -104,15 +104,17 @@ export const SortingTabs = ({
         <div className="flex items-center space-x-2 sm:space-x-4">
           <button className="flex items-center text-xs sm:text-sm text-gray-600 hover:text-gray-900">
             <span className="hidden sm:inline">Sort by</span>
-            <span className="ml-0 sm:ml-1 font-medium">Recommended</span>
-            <Icon
+            <span className="ml-0 sm:ml-1 font-medium">
+              {tabs.find((s) => s.id === sortBy)?.label}
+            </span>
+            {/* <Icon
               icon="heroicons:chevron-down"
               className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 ml-1"
-            />
+            /> */}
           </button>
-          <button className="text-xs sm:text-sm text-gray-600 hover:text-gray-900">
+          {/* <button className="text-xs sm:text-sm text-gray-600 hover:text-gray-900">
             Other sort
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

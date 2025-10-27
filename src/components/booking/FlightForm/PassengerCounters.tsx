@@ -13,6 +13,18 @@ const PassengerCounters: React.FC<PassengerCountersProps> = ({
   const dispatch = useAppDispatch();
   const { formData } = UseFlightForm();
 
+  const totalPassengers =
+    formData.adults + formData.children + formData.infants;
+
+  const handleIncrement = (type: "adults" | "children" | "infants") => {
+    if (totalPassengers >= 9) return; // prevent adding more than 9 total
+    dispatch(updatePassengerCount({ type, increment: true }));
+  };
+
+  const handleDecrement = (type: "adults" | "children" | "infants") => {
+    dispatch(updatePassengerCount({ type, increment: false }));
+  };
+
   return (
     <div
       className={`flex flex-col sm:flex-row md:flex-row gap-2 w-full ${
@@ -32,9 +44,7 @@ const PassengerCounters: React.FC<PassengerCountersProps> = ({
             <div className="flex items-center">
               <button
                 type="button"
-                onClick={() =>
-                  dispatch(updatePassengerCount({ type, increment: false }))
-                }
+                onClick={() => handleDecrement(type)}
                 className="p-1 rounded transition-colors cursor-pointer"
               >
                 <svg
@@ -56,10 +66,11 @@ const PassengerCounters: React.FC<PassengerCountersProps> = ({
               </span>
               <button
                 type="button"
-                onClick={() =>
-                  dispatch(updatePassengerCount({ type, increment: true }))
-                }
-                className="p-1 rounded transition-colors cursor-pointer"
+                onClick={() => handleIncrement(type)}
+                className={`p-1 rounded transition-colors cursor-pointer ${
+                  totalPassengers >= 9 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={totalPassengers >= 9}
               >
                 <svg
                   className="w-3 h-3 sm:w-4 sm:h-4"

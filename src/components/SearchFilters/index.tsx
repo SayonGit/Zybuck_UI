@@ -3,9 +3,9 @@ import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { Icon } from "@iconify/react";
 import { FilterSection } from "./FilterSection";
-import { TripsFilter } from "./TripsFilter";
-import { AirportsFilter } from "./AirportsFilter";
-import { FlightNumberFilter } from "./FlightNumberFilter";
+// import { TripsFilter } from "./TripsFilter";
+// import { AirportsFilter } from "./AirportsFilter";
+// import { FlightNumberFilter } from "./FlightNumberFilter";
 import { FAQsFilter } from "./FAQsFilter";
 import styles from "./index.module.scss";
 import type { AirlineNamedLogo } from "@/staticData/currencySigns";
@@ -16,12 +16,26 @@ interface SearchFiltersProps {
   airlines?: AirlineNamedLogo[];
   selectedAirlines?: string[];
   setSelectedAirlines?: Dispatch<SetStateAction<string[]>>;
+  handleStopSelection: (stop: string) => void;
+  selectedStop: string;
+  departureRange: [number, number];
+  handleDepartureFilter: (range: [number, number]) => void;
+  arrivalRange: [number, number];
+  handleArrivalFilter: (range: [number, number]) => void;
+  handleAirlineSelection: (airline: string) => void;
 }
 
 export const SearchFilters = ({
   airlines,
   selectedAirlines,
   setSelectedAirlines,
+  handleStopSelection,
+  selectedStop,
+  departureRange,
+  handleDepartureFilter,
+  arrivalRange,
+  handleArrivalFilter,
+  handleAirlineSelection,
 }: SearchFiltersProps) => {
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
@@ -38,29 +52,12 @@ export const SearchFilters = ({
   });
 
   // Filter states
-  const [selectedStop, setSelectedStop] = useState<string>("all");
-  const [departureRange, setDepartureRange] = useState<[number, number]>([
-    0, 24,
-  ]);
-  const [arrivalRange, setArrivalRange] = useState<[number, number]>([0, 24]);
   const [searchParams] = useSearchParams();
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
     }));
-  };
-
-  const handleStopSelection = (stopType: string) => {
-    setSelectedStop(stopType);
-  };
-
-  const handleAirlineToggle = (airline: string) => {
-    setSelectedAirlines!((prev) =>
-      prev.includes(airline)
-        ? prev.filter((a) => a !== airline)
-        : [...prev, airline]
-    );
   };
 
   const formatTime = (hour: number) => {
@@ -152,9 +149,13 @@ export const SearchFilters = ({
               min="0"
               max="24"
               value={departureRange[0]}
-              onChange={(e) =>
-                setDepartureRange([parseInt(e.target.value), departureRange[1]])
-              }
+              onChange={(e) => {
+                const newRange: [number, number] = [
+                  Math.min(parseInt(e.target.value), departureRange[1] - 1),
+                  departureRange[1],
+                ];
+                handleDepartureFilter(newRange);
+              }}
               className={`absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer ${styles.rangeSlider}`}
               style={{ zIndex: 1 }} // Lower z-index for left slider
             />
@@ -163,9 +164,13 @@ export const SearchFilters = ({
               min="0"
               max="24"
               value={departureRange[1]}
-              onChange={(e) =>
-                setDepartureRange([departureRange[0], parseInt(e.target.value)])
-              }
+              onChange={(e) => {
+                const newRange: [number, number] = [
+                  departureRange[0],
+                  Math.max(parseInt(e.target.value), departureRange[0] + 1),
+                ];
+                handleDepartureFilter(newRange);
+              }}
               className={`absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer ${styles.rangeSlider}`}
               style={{ zIndex: 2 }} // Higher z-index for right slider
             />
@@ -199,9 +204,13 @@ export const SearchFilters = ({
               min="0"
               max="24"
               value={arrivalRange[0]}
-              onChange={(e) =>
-                setArrivalRange([parseInt(e.target.value), arrivalRange[1]])
-              }
+              onChange={(e) => {
+                const newRange: [number, number] = [
+                  Math.min(parseInt(e.target.value), arrivalRange[1] - 1),
+                  arrivalRange[1],
+                ];
+                handleArrivalFilter(newRange);
+              }}
               className={`absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer ${styles.rangeSlider}`}
               style={{ zIndex: 1 }} // Lower z-index for left slider
             />
@@ -210,9 +219,13 @@ export const SearchFilters = ({
               min="0"
               max="24"
               value={arrivalRange[1]}
-              onChange={(e) =>
-                setArrivalRange([arrivalRange[0], parseInt(e.target.value)])
-              }
+              onChange={(e) => {
+                const newRange: [number, number] = [
+                  arrivalRange[0],
+                  Math.max(parseInt(e.target.value), arrivalRange[0] + 1),
+                ];
+                handleArrivalFilter(newRange);
+              }}
               className={`absolute w-full h-2 bg-transparent rounded-lg appearance-none cursor-pointer ${styles.rangeSlider}`}
               style={{ zIndex: 2 }} // Higher z-index for right slider
             />
@@ -242,8 +255,10 @@ export const SearchFilters = ({
               >
                 <input
                   type="checkbox"
-                  checked={selectedAirlines!.includes(airline.iata)}
-                  onChange={() => handleAirlineToggle(airline.iata)}
+                  checked={selectedAirlines!.includes(airline.name)}
+                  onChange={() => {
+                    handleAirlineSelection(airline.name);
+                  }}
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
                 />
                 <span className="ml-2 text-xs sm:text-sm text-gray-700">
@@ -255,31 +270,31 @@ export const SearchFilters = ({
         </FilterSection>
 
         {/* 6. Trips Filter */}
-        <FilterSection
+        {/* <FilterSection
           title="Trips"
           isExpanded={expandedSections.trips}
           onToggle={() => toggleSection("trips")}
         >
           <TripsFilter />
-        </FilterSection>
+        </FilterSection> */}
 
         {/* 7. Airports Filter */}
-        <FilterSection
+        {/* <FilterSection
           title="Airports"
           isExpanded={expandedSections.airports}
           onToggle={() => toggleSection("airports")}
         >
           <AirportsFilter />
-        </FilterSection>
+        </FilterSection> */}
 
         {/* 8. Flight Number Filter */}
-        <FilterSection
+        {/* <FilterSection
           title="Flight Number"
           isExpanded={expandedSections.flightNumber}
           onToggle={() => toggleSection("flightNumber")}
         >
           <FlightNumberFilter />
-        </FilterSection>
+        </FilterSection> */}
 
         {/* 9. FAQs Filter */}
         <FilterSection
@@ -294,9 +309,9 @@ export const SearchFilters = ({
         <div className="p-3 sm:p-4">
           <button
             onClick={() => {
-              setSelectedStop("all");
-              setDepartureRange([0, 24]);
-              setArrivalRange([0, 24]);
+              handleStopSelection("all");
+              handleDepartureFilter([0, 24]);
+              handleArrivalFilter([0, 24]);
               setSelectedAirlines!([]);
             }}
             className="w-full px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
