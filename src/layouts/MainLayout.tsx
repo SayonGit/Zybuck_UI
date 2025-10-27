@@ -4,6 +4,7 @@ import Header from "../components/common/Header";
 import Footer from "../components/Footer";
 import Sidebar from "@/components/Sidebar";
 import { Menu, X } from "lucide-react";
+import { ToastContainer } from "react-toastify";
 
 interface MainLayoutProps {
   showFooter?: boolean;
@@ -17,6 +18,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="min-h-screen">
+      <ToastContainer position="bottom-right" autoClose={3000} />
       {showHeader && (
         <div className="flex">
           <button

@@ -21,15 +21,26 @@ const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState<string>("flight");
   const [sortBy, setSortBy] = useState<SortKey>("recommended");
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
+  const [selectedStop, setSelectedStop] = useState<string>("all");
+  const [flightResult, setFlightResult] = useState<Flight[]>([]);
+  const [arrivalRange, setArrivalRange] = useState<[number, number]>([0, 24]);
+  const [departureRange, setDepartureRange] = useState<[number, number]>([
+    0, 24,
+  ]);
+
   const transformed = transformFlightOffers(data) as {
     recommended: Flight[];
     cheapest: Flight[];
     quickest: Flight[];
     best: Flight[];
   };
-  const flightResult = transformed[sortBy] ?? [];
-  const [showFilters, setShowFilters] = useState(false);
-  const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log(transformed[sortBy]);
+    setFlightResult(transformed[sortBy] ?? []);
+  }, [sortBy, data]);
 
   useEffect(() => {
     setSearchType(getSearchTypeFromParams(searchParams));
@@ -56,6 +67,68 @@ const SearchPage = () => {
       infants: infants ? parseInt(infants) : 0,
     });
   }, [searchParams]);
+
+  const handleStopSelection = (stopType: string) => {
+    setSelectedStop(stopType);
+
+    const baseFlights = transformed[sortBy] ?? [];
+
+    if (stopType === "direct") {
+      setFlightResult(baseFlights.filter((flight) => flight.stops === 0));
+    } else if (stopType === "oneStop") {
+      setFlightResult(baseFlights.filter((flight) => flight.stops === 1));
+    } else {
+      setFlightResult(baseFlights);
+    }
+  };
+
+  const handleDepartureFilter = (range: [number, number]) => {
+    setDepartureRange(range);
+
+    const [minHour, maxHour] = range;
+
+    const baseFlights = transformed[sortBy] ?? [];
+
+    const filtered = baseFlights.filter((flight) => {
+      const depHour = new Date(flight.travelDate).getHours();
+      return depHour >= minHour && depHour <= maxHour;
+    });
+
+    setFlightResult(filtered);
+  };
+  const handleArrivalFilter = (range: [number, number]) => {
+    setArrivalRange(range);
+
+    const [minHour, maxHour] = range;
+
+    const baseFlights = transformed[sortBy] ?? [];
+
+    const filtered = baseFlights.filter((flight) => {
+      const depHour = new Date(flight.arrivalDate).getHours();
+      return depHour >= minHour && depHour <= maxHour;
+    });
+
+    setFlightResult(filtered);
+  };
+
+  const handleAirlineSelection = (airline: string) => {
+    const allAirlines = selectedAirlines.includes(airline)
+      ? selectedAirlines.filter((a) => a !== airline)
+      : [...selectedAirlines, airline];
+    setSelectedAirlines(allAirlines);
+    const baseFlights = transformed[sortBy] ?? [];
+
+    if (allAirlines.length === 0) {
+      setFlightResult(baseFlights);
+      return;
+    }
+
+    const filtered = baseFlights.filter((flight) =>
+      allAirlines.includes(flight.airline)
+    );
+
+    setFlightResult(filtered);
+  };
 
   return (
     <div>
@@ -107,6 +180,13 @@ const SearchPage = () => {
                   airlines={getAllAirlines(data)}
                   selectedAirlines={selectedAirlines}
                   setSelectedAirlines={setSelectedAirlines}
+                  handleStopSelection={handleStopSelection}
+                  selectedStop={selectedStop}
+                  departureRange={departureRange}
+                  handleDepartureFilter={handleDepartureFilter}
+                  arrivalRange={arrivalRange}
+                  handleArrivalFilter={handleArrivalFilter}
+                  handleAirlineSelection={handleAirlineSelection}
                 />
               )}
             </div>
@@ -138,6 +218,13 @@ const SearchPage = () => {
               airlines={getAllAirlines(data)}
               selectedAirlines={selectedAirlines}
               setSelectedAirlines={setSelectedAirlines}
+              handleStopSelection={handleStopSelection}
+              selectedStop={selectedStop}
+              departureRange={departureRange}
+              handleDepartureFilter={handleDepartureFilter}
+              arrivalRange={arrivalRange}
+              handleArrivalFilter={handleArrivalFilter}
+              handleAirlineSelection={handleAirlineSelection}
             />
           )}
         </div>

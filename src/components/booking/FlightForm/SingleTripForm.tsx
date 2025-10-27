@@ -7,7 +7,7 @@ import {
 import UseFlightForm from "../../../hooks/useFlightForm";
 import InputField from "../../common/InputField";
 import { InputDividerIcon } from "../../../assets";
-import styles from "./FlightFormStyle.module.scss";
+// import styles from "./FlightFormStyle.module.scss";
 import { useAirportSearch } from "./useAirportSearch";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
@@ -19,8 +19,8 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
   const dispatch = useAppDispatch();
   const { formData } = UseFlightForm();
 
-  const fromSearch = useAirportSearch();
-  const toSearch = useAirportSearch();
+  const fromSearch = useAirportSearch(formData.to);
+  const toSearch = useAirportSearch(formData.from);
 
   const handleSelect = useCallback(
     (type: "from" | "to", value: string) => {
@@ -61,6 +61,12 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
       </ul>
     );
 
+  const swapLocations = () => {
+    const currentFrom = formData.from;
+    const currentTo = formData.to;
+    dispatch(updateFormData({ from: currentTo, to: currentFrom }));
+  };
+
   return (
     <>
       {/* From/To Section - Desktop Version */}
@@ -91,7 +97,11 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
           </div>
 
           <div className="flex items-center px-2">
-            <img src={InputDividerIcon} className="w-4 h-4" />
+            <img
+              src={InputDividerIcon}
+              className="w-4 h-8 cursor-pointer"
+              onClick={swapLocations}
+            />
           </div>
           <div className="relative flex-1">
             <InputField
@@ -187,6 +197,7 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                   className={`flex-1 h-input`}
                   label="Depart"
                   type="date"
+                  min={new Date().toISOString().split("T")[0]}
                   value={formData.departDate}
                   isDouble={true}
                   onChange={(value) =>
@@ -199,6 +210,9 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                   className={`flex-1 h-input`}
                   label="Return"
                   type="date"
+                  min={
+                    new Date(formData.departDate).toISOString().split("T")[0]
+                  }
                   isDouble={true}
                   value={formData.returnDate || ""}
                   onChange={(value) =>

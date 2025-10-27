@@ -41,6 +41,7 @@ export interface Flight {
   from: string;
   to: string;
   travelDate: string;
+  arrivalDate: string;
 
   stops: number;
   stopDetails: StopDetail[];
