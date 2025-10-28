@@ -1,6 +1,5 @@
 import type { SortKey } from "@/pages/SearchPage";
 import type { Flight } from "@/types";
-import { Icon } from "@iconify/react";
 
 interface SortingTabsProps {
   sortBy: string;

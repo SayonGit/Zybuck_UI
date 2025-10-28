@@ -43,10 +43,10 @@ export default function ContactDetailsCard({ form }: Props) {
     register,
     control,
     formState: { errors },
-    watch,
+    // watch,
   } = form;
 
-  const selectedCountry = watch("contact.country");
+  // const selectedCountry = watch("contact.country");
   const contactErrors = errors.contact;
 
   return (

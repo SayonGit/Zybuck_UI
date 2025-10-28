@@ -1,4 +1,3 @@
-import { EmiratesLogo } from "@/assets";
 import { formatDate } from "@/services/globalServices";
 import type { Flight } from "@/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
