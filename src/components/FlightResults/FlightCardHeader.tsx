@@ -28,7 +28,6 @@ export const getStatusColor = (dealType: string) => {
 
 export const FlightCardHeader = ({
   flight,
-  isExpanded,
   isLoading,
   onSelect,
 }: FlightCardHeaderProps) => {

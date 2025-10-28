@@ -15,7 +15,6 @@ interface FlightCardContentProps {
 
 export const FlightCardContent = ({
   flight,
-  isExpanded,
   isLoading,
   onSelect,
 }: FlightCardContentProps) => {
