@@ -3,13 +3,13 @@ import { Controller, type UseFormReturn } from "react-hook-form";
 
 type Props = {
   form: UseFormReturn<CheckoutFormValues>;
-  index?: number; // Passenger number label
+  index?: number; // Passenger index
   typeLabel?: string; // "Adult" | "Child" | etc.
 };
 
 export default function PassengerCard({
   form,
-  index = 1,
+  index = 0,
   typeLabel = "Adult",
 }: Props) {
   const {
@@ -18,8 +18,7 @@ export default function PassengerCard({
     formState: { errors },
   } = form;
 
-  // Convenience error helpers
-  const err = errors.passenger;
+  const err = errors.passenger?.[index];
 
   return (
     <section className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
@@ -37,41 +36,39 @@ export default function PassengerCard({
           </div>
           <div>
             <p className="text-base font-semibold text-gray-900">
-              Passenger {index}
+              Passenger {index + 1}
             </p>
             <p className="text-sm text-gray-500">{typeLabel}</p>
           </div>
         </div>
       </header>
 
-      {/* Title / Gender (Mr/Ms etc.) */}
+      {/* Title */}
       <fieldset className="mb-5">
         <legend className="mb-2 text-sm font-medium text-gray-900">
           Title
         </legend>
-        <div className="flex items-center gap-6">
-          <Controller
-            name="passenger.title"
-            control={control}
-            render={({ field }) => (
-              <div className="flex items-center gap-6">
-                {["Mr", "Ms"].map((t) => (
-                  <label key={t} className="inline-flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value={t}
-                      checked={field.value === t}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      className="h-5 w-5 appearance-none rounded-full border border-gray-300 outline-none ring-2 ring-transparent checked:border-blue-600 checked:bg-blue-600 focus-visible:ring-2 focus-visible:ring-blue-200"
-                      aria-label={t}
-                    />
-                    <span className="text-sm text-gray-900">{t}</span>
-                  </label>
-                ))}
-              </div>
-            )}
-          />
-        </div>
+        <Controller
+          name={`passenger.${index}.title`}
+          control={control}
+          render={({ field }) => (
+            <div className="flex items-center gap-6">
+              {["Mr", "Ms"].map((t) => (
+                <label key={t} className="inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    value={t}
+                    checked={field.value === t}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    className="h-5 w-5 appearance-none rounded-full border border-gray-300 outline-none ring-2 ring-transparent checked:border-blue-600 checked:bg-blue-600 focus-visible:ring-2 focus-visible:ring-blue-200"
+                    aria-label={t}
+                  />
+                  <span className="text-sm text-gray-900">{t}</span>
+                </label>
+              ))}
+            </div>
+          )}
+        />
         {err?.title && (
           <p className="mt-2 text-sm text-red-600">
             {err.title.message as string}
@@ -79,22 +76,21 @@ export default function PassengerCard({
         )}
       </fieldset>
 
-      {/* Names */}
+      {/* First / Last Name */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label
             className="mb-1 block text-sm text-gray-700"
-            htmlFor="passenger.firstName"
+            htmlFor={`passenger.${index}.firstName`}
           >
             First name
           </label>
           <input
-            id="passenger.firstName"
+            id={`passenger.${index}.firstName`}
             type="text"
             placeholder="First name"
-            {...register("passenger.firstName")}
+            {...register(`passenger.${index}.firstName`)}
             className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-            aria-invalid={!!err?.firstName || undefined}
           />
           {err?.firstName && (
             <p className="mt-2 text-sm text-red-600">
@@ -106,17 +102,16 @@ export default function PassengerCard({
         <div>
           <label
             className="mb-1 block text-sm text-gray-700"
-            htmlFor="passenger.lastName"
+            htmlFor={`passenger.${index}.lastName`}
           >
             Last name
           </label>
           <input
-            id="passenger.lastName"
+            id={`passenger.${index}.lastName`}
             type="text"
             placeholder="Last name"
-            {...register("passenger.lastName")}
+            {...register(`passenger.${index}.lastName`)}
             className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
-            aria-invalid={!!err?.lastName || undefined}
           />
           {err?.lastName && (
             <p className="mt-2 text-sm text-red-600">
@@ -126,7 +121,7 @@ export default function PassengerCard({
         </div>
       </div>
 
-      {/* Date of birth - mm / dd / yyyy */}
+      {/* Date of birth */}
       <div className="mt-4">
         <label className="mb-1 block text-sm text-gray-700">
           Date of birth
@@ -137,9 +132,8 @@ export default function PassengerCard({
             inputMode="numeric"
             placeholder="mm"
             maxLength={2}
-            {...register("passenger.dob.month")}
+            {...register(`passenger.${index}.dob.month`)}
             className="w-16 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 text-center"
-            aria-invalid={!!err?.dob?.month || undefined}
           />
           <span className="text-gray-400">/</span>
           <input
@@ -147,9 +141,8 @@ export default function PassengerCard({
             inputMode="numeric"
             placeholder="dd"
             maxLength={2}
-            {...register("passenger.dob.day")}
+            {...register(`passenger.${index}.dob.day`)}
             className="w-16 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 text-center"
-            aria-invalid={!!err?.dob?.day || undefined}
           />
           <span className="text-gray-400">/</span>
           <input
@@ -157,9 +150,8 @@ export default function PassengerCard({
             inputMode="numeric"
             placeholder="yyyy"
             maxLength={4}
-            {...register("passenger.dob.year")}
+            {...register(`passenger.${index}.dob.year`)}
             className="w-24 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 text-center"
-            aria-invalid={!!err?.dob?.year || undefined}
           />
         </div>
 

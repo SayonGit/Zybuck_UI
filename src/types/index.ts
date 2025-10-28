@@ -42,6 +42,7 @@ export interface Flight {
   to: string;
   travelDate: string;
   arrivalDate: string;
+  airlineCode: string;
 
   stops: number;
   stopDetails: StopDetail[];

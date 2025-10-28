@@ -55,7 +55,7 @@ export const paymentSchema = z.object({
 });
 
 export const checkoutSchema = z.object({
-  passenger: passengerSchema,
+  passenger: passengerSchema.array(),
   contact: contactSchema,
   extras: extrasSchema,
   payment: paymentSchema,

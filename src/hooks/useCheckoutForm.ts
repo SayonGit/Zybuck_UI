@@ -1,16 +1,19 @@
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import {
   checkoutSchema,
   type CheckoutFormValues,
 } from "../validations/CheckoutSchema";
 import { customZodResolver } from "./customZodResolver";
-
 export function useCheckoutForm(initial?: Partial<CheckoutFormValues>) {
+  const passengerCount = initial?.passenger?.length ?? 1;
+
   const form = useForm<CheckoutFormValues>({
-    resolver: customZodResolver(checkoutSchema),
+    resolver: customZodResolver(
+      checkoutSchema
+    ) as unknown as Resolver<CheckoutFormValues>,
     mode: "onChange",
     defaultValues: {
-      passenger: {
+      passenger: Array.from({ length: passengerCount }, () => ({
         title: "Mr",
         firstName: "",
         lastName: "",
@@ -19,7 +22,7 @@ export function useCheckoutForm(initial?: Partial<CheckoutFormValues>) {
         docType: "Passport",
         docNumber: "",
         docExpiry: { month: "", year: "" },
-      },
+      })),
       contact: {
         email: "",
         emailConfirm: "",

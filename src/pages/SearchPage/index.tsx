@@ -13,121 +13,138 @@ import { Icon } from "@iconify/react";
 import useFlightOffers from "./useFlightSearch";
 import { getAllAirlines, transformFlightOffers } from "./transformFlightOffers";
 import type { Flight } from "@/types";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchResults } from "@/store/slices/flightSearchSlice";
 
 export type SortKey = "recommended" | "cheapest" | "quickest" | "best";
 
 const SearchPage = () => {
+  const dispatch = useDispatch();
+  const storedFlights = useSelector(
+    (state: any) => state.flightSearch.searchResults
+  );
+
   const { data, loading: isLoading, fetchFlightOffers } = useFlightOffers();
   const [searchParams] = useSearchParams();
+
   const [searchType, setSearchType] = useState<string>("flight");
   const [sortBy, setSortBy] = useState<SortKey>("recommended");
   const [showFilters, setShowFilters] = useState(false);
+
   const [selectedAirlines, setSelectedAirlines] = useState<string[]>([]);
   const [selectedStop, setSelectedStop] = useState<string>("all");
-  const [flightResult, setFlightResult] = useState<Flight[]>([]);
-  const [arrivalRange, setArrivalRange] = useState<[number, number]>([0, 24]);
   const [departureRange, setDepartureRange] = useState<[number, number]>([
     0, 24,
   ]);
+  const [arrivalRange, setArrivalRange] = useState<[number, number]>([0, 24]);
+  const [flightResult, setFlightResult] = useState<Flight[]>([]);
 
-  const transformed = transformFlightOffers(data) as {
+  const [transformed, setTransformed] = useState<{
     recommended: Flight[];
     cheapest: Flight[];
     quickest: Flight[];
     best: Flight[];
-  };
+  }>({
+    recommended: [],
+    cheapest: [],
+    quickest: [],
+    best: [],
+  });
 
   useEffect(() => {
-    console.log(transformed[sortBy]);
-    setFlightResult(transformed[sortBy] ?? []);
-  }, [sortBy, data]);
+    if (data && Object.keys(data).length > 0) {
+      const transformedData = transformFlightOffers(data);
+      setTransformed(transformedData);
+      dispatch(setSearchResults(transformedData));
+      setFlightResult(transformedData[sortBy] ?? []);
+    }
+  }, [data]);
 
   useEffect(() => {
-    setSearchType(getSearchTypeFromParams(searchParams));
-    const fromParam = searchParams.get("from")?.toString() || "";
-    const toParam = searchParams.get("to")?.toString() || "";
-    const departureDate = searchParams.get("departDate")?.toString() || "";
-    const returnDate = searchParams.get("returnDate")?.toString() || "";
-    const adultsCnt = searchParams.get("adults")?.toString() || "";
-    const children = searchParams.get("children")?.toString() || "";
-    const infants = searchParams.get("infants")?.toString() || "";
-    const travelClass = searchParams.get("class")?.toString() || "";
-    // Extract text inside parentheses (e.g., "CODE")
+    if (storedFlights && Object.keys(storedFlights).length > 0) {
+      setTransformed(storedFlights);
+      setFlightResult(storedFlights[sortBy] ?? []);
+    }
+  }, [storedFlights, sortBy]);
+
+  useEffect(() => {
+    const fromParam = searchParams.get("from") || "";
+    const toParam = searchParams.get("to") || "";
+    const departDate = searchParams.get("departDate") || "";
+    const returnDate = searchParams.get("returnDate") || "";
+    const adultsCnt = searchParams.get("adults") || "1";
+    const children = searchParams.get("children") || "0";
+    const infants = searchParams.get("infants") || "0";
+    const travelClass = searchParams.get("class") || "ECONOMY";
+
     const fromCode = fromParam.match(/\(([^)]+)\)/)?.[1] || "";
     const toCode = toParam.match(/\(([^)]+)\)/)?.[1] || "";
 
+    setSearchType(getSearchTypeFromParams(searchParams));
+
     fetchFlightOffers({
-      fromCode: fromCode,
-      toCode: toCode,
-      departureDate: departureDate,
-      returnDate: returnDate,
-      adultsCnt: adultsCnt ? parseInt(adultsCnt) : 1,
-      class: travelClass.toUpperCase() || "ECONOMY",
-      children: children ? parseInt(children) : 0,
-      infants: infants ? parseInt(infants) : 0,
+      fromCode,
+      toCode,
+      departureDate: departDate,
+      returnDate,
+      adultsCnt: parseInt(adultsCnt),
+      class: travelClass.toUpperCase(),
+      children: parseInt(children),
+      infants: parseInt(infants),
     });
   }, [searchParams]);
 
-  const handleStopSelection = (stopType: string) => {
-    setSelectedStop(stopType);
-
-    const baseFlights = transformed[sortBy] ?? [];
-
-    if (stopType === "direct") {
-      setFlightResult(baseFlights.filter((flight) => flight.stops === 0));
-    } else if (stopType === "oneStop") {
-      setFlightResult(baseFlights.filter((flight) => flight.stops === 1));
-    } else {
-      setFlightResult(baseFlights);
-    }
-  };
-
-  const handleDepartureFilter = (range: [number, number]) => {
-    setDepartureRange(range);
-
-    const [minHour, maxHour] = range;
-
+  useEffect(() => {
     const baseFlights = transformed[sortBy] ?? [];
 
     const filtered = baseFlights.filter((flight) => {
+      const stops = Number(flight.stops ?? 0);
+
+      // --- Stop Filter ---
+      if (selectedStop === "direct" && stops !== 0) return false;
+      if (selectedStop === "oneStop" && stops !== 1) return false;
+
+      // --- Airline Filter ---
+      if (
+        selectedAirlines.length > 0 &&
+        !selectedAirlines.includes(flight.airline)
+      )
+        return false;
+
+      // --- Departure Time Filter ---
       const depHour = new Date(flight.travelDate).getHours();
-      return depHour >= minHour && depHour <= maxHour;
+      if (depHour < departureRange[0] || depHour > departureRange[1])
+        return false;
+
+      // --- Arrival Time Filter ---
+      const arrHour = new Date(flight.arrivalDate).getHours();
+      if (arrHour < arrivalRange[0] || arrHour > arrivalRange[1]) return false;
+
+      return true;
     });
 
     setFlightResult(filtered);
-  };
-  const handleArrivalFilter = (range: [number, number]) => {
+  }, [
+    sortBy,
+    selectedStop,
+    selectedAirlines,
+    departureRange,
+    arrivalRange,
+    transformed,
+  ]);
+
+  // Handlers
+  const handleStopSelection = (stopType: string) => setSelectedStop(stopType);
+  const handleDepartureFilter = (range: [number, number]) =>
+    setDepartureRange(range);
+  const handleArrivalFilter = (range: [number, number]) =>
     setArrivalRange(range);
-
-    const [minHour, maxHour] = range;
-
-    const baseFlights = transformed[sortBy] ?? [];
-
-    const filtered = baseFlights.filter((flight) => {
-      const depHour = new Date(flight.arrivalDate).getHours();
-      return depHour >= minHour && depHour <= maxHour;
-    });
-
-    setFlightResult(filtered);
-  };
-
   const handleAirlineSelection = (airline: string) => {
-    const allAirlines = selectedAirlines.includes(airline)
-      ? selectedAirlines.filter((a) => a !== airline)
-      : [...selectedAirlines, airline];
-    setSelectedAirlines(allAirlines);
-    const baseFlights = transformed[sortBy] ?? [];
-
-    if (allAirlines.length === 0) {
-      setFlightResult(baseFlights);
-      return;
-    }
-
-    const filtered = baseFlights.filter((flight) =>
-      allAirlines.includes(flight.airline)
+    setSelectedAirlines((prev) =>
+      prev.includes(airline)
+        ? prev.filter((a) => a !== airline)
+        : [...prev, airline]
     );
-
-    setFlightResult(filtered);
   };
 
   return (
@@ -135,7 +152,7 @@ const SearchPage = () => {
       {/* Search Summary Form */}
       <SearchSummary searchType={searchType} />
 
-      {/* Mobile Filter Toggle Button */}
+      {/* Mobile Filter Toggle */}
       <div className="lg:hidden mt-4">
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -154,7 +171,7 @@ const SearchPage = () => {
         </button>
       </div>
 
-      {/* Mobile Filters Overlay */}
+      {/* Mobile Filters Drawer */}
       {showFilters && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
           <div className="fixed inset-y-0 left-0 w-full max-w-sm bg-white shadow-xl">
@@ -202,9 +219,9 @@ const SearchPage = () => {
         </div>
       )}
 
-      {/* Main Content Layout */}
+      {/* Main Layout */}
       <div className="grid lg:grid-cols-4 gap-6 mt-6">
-        {/* Desktop Filters Sidebar */}
+        {/* Desktop Filters */}
         <div className="hidden lg:block lg:col-span-1">
           {isLoading ? (
             <div className="space-y-4">
@@ -229,9 +246,8 @@ const SearchPage = () => {
           )}
         </div>
 
-        {/* Results Section */}
+        {/* Results */}
         <div className="col-span-full lg:col-span-3">
-          {/* Sorting Tabs */}
           <SortingTabs
             sortBy={sortBy}
             setSortBy={setSortBy}
@@ -243,7 +259,6 @@ const SearchPage = () => {
             quickestData={transformed.quickest[0]}
           />
 
-          {/* Search Results */}
           {isLoading ? (
             <SkeletonSearchResults />
           ) : (
