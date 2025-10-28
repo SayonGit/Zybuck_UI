@@ -226,6 +226,7 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
               className="w-full h-input date-input-no-icon"
               label="Depart"
               type="date"
+              min={new Date().toISOString().split("T")[0]}
               value={formData.departDate}
               onChange={(value) =>
                 dispatch(updateFormData({ departDate: value }))
@@ -241,6 +242,7 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
               className="w-full h-input date-input-no-icon"
               label="Depart"
               type="date"
+              min={new Date().toISOString().split("T")[0]}
               value={formData.departDate}
               onChange={(value) =>
                 dispatch(updateFormData({ departDate: value }))
@@ -251,6 +253,7 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 className="w-full h-input date-input-no-icon"
                 label="Return"
                 type="date"
+                min={new Date(formData.departDate).toISOString().split("T")[0]}
                 value={formData.returnDate || ""}
                 onChange={(value) =>
                   dispatch(updateFormData({ returnDate: value }))

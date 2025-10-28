@@ -10,8 +10,8 @@ export const useNavigation = () => {
   const goToContact = () => navigate("/contact");
   const goToSearch = (query: URLSearchParams) =>
     navigate("/search?" + query.toString());
-  const goToCheckout = (query: URLSearchParams) =>
-    navigate("/checkout?" + query.toString());
+  const goToCheckout = (query: URLSearchParams, dataToPass?: any) =>
+    navigate("/checkout?" + query.toString(), { state: dataToPass });
   const goToDetails = (id: string) => navigate(`/details/${id}`);
   const goBack = () => navigate(-1);
   const goForward = () => navigate(1);

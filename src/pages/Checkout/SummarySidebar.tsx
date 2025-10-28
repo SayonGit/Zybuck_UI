@@ -1,26 +1,34 @@
+import { currencySigns } from "@/staticData/currencySigns";
+import type { PriceDetails } from "@/types";
 import React from "react";
 
 interface FlightBookingPanelProps {
   destination?: string;
-  passengers?: number;
+  adults?: number;
+  children?: number;
+  infants?: number;
   carryOnIncluded?: boolean;
   checkInBags?: number;
   services?: string;
-  regularPrice?: number;
+  priceDetails?: PriceDetails;
   discount?: number;
 }
 
 const FlightBookingPanel: React.FC<FlightBookingPanelProps> = ({
   destination = "Los Angeles, CA",
-  passengers = 2,
+  adults = 1,
+  children = 0,
+  infants = 0,
   carryOnIncluded = true,
   checkInBags = 0,
   services = "No extra services selected",
-  regularPrice = 145.94,
+  priceDetails,
   discount = 4.49,
 }) => {
-  const totalPrice = regularPrice - discount;
-  const pricePerPassenger = totalPrice / passengers;
+  const basePrice = priceDetails?.base;
+  const currency = currencySigns[priceDetails?.currency!] || "$";
+  const totalPrice = priceDetails?.grandTotal;
+  const pricePerPassenger = totalPrice! / (adults + children + infants);
 
   return (
     <div>
@@ -43,7 +51,11 @@ const FlightBookingPanel: React.FC<FlightBookingPanelProps> = ({
           {/* Passengers */}
           <div>
             <h4 className="font-medium text-gray-900 mb-1">Passengers</h4>
-            <p className="text-gray-600">{passengers} adults</p>
+            <p className="text-gray-600">{adults} adults</p>
+            {children > 0 && (
+              <p className="text-gray-600">{children} children</p>
+            )}
+            {infants > 0 && <p className="text-gray-600">{infants} infants</p>}
           </div>
 
           {/* Carry-on bag */}
@@ -82,11 +94,24 @@ const FlightBookingPanel: React.FC<FlightBookingPanelProps> = ({
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-700">Regular price</span>
-              <span className="text-gray-900">${regularPrice.toFixed(2)}</span>
+              <span className="text-gray-900">
+                {currency}
+                {basePrice} X {adults + children + infants}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-700">Tax</span>
+              <span className="text-gray-900">
+                {currency}
+                {totalPrice! - (adults + children + infants) * basePrice!}
+              </span>
             </div>
             <div className="flex justify-between text-sm text-green-600">
               <span>Discount applied</span>
-              <span>-${discount.toFixed(2)}</span>
+              <span>
+                -{currency}
+                {discount.toFixed(2)}
+              </span>
             </div>
           </div>
 
@@ -97,12 +122,16 @@ const FlightBookingPanel: React.FC<FlightBookingPanelProps> = ({
         <div className="bg-blue-50 space-y-1 p-5">
           <div className="flex justify-between font-semibold text-lg">
             <span className="text-gray-900">Total price</span>
-            <span className="text-gray-900">${totalPrice.toFixed(2)}</span>
+            <span className="text-gray-900">
+              {currency}
+              {totalPrice}
+            </span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Price per passenger</span>
             <span className="text-gray-700">
-              ${pricePerPassenger.toFixed(2)}
+              {currency}
+              {pricePerPassenger.toFixed(2)}
             </span>
           </div>
           <p className="text-xs text-gray-400 mt-1">

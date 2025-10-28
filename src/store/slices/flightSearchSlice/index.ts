@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { FlightSearchData } from "../../../types";
+import type { Flight, FlightSearchData } from "../../../types";
 
 export const TripOption = {
   oneWay: "oneWay",
@@ -22,7 +22,9 @@ interface FlightSearchState {
   selectedTrip: TripOption;
   selectedAirline: string;
   isLoading: boolean;
-  searchResults: any[];
+  searchResults: {
+    [key: string]: Flight[];
+  };
   multipleDestinations: FlightSegment[];
 }
 
@@ -41,7 +43,7 @@ const initialState: FlightSearchState = {
   selectedTrip: "oneWay",
   selectedAirline: "all",
   isLoading: false,
-  searchResults: [],
+  searchResults: {},
   multipleDestinations: [
     { id: "1", from: "New Delhi", to: "Mumbai", departDate: "" },
     { id: "2", from: "Mumbai", to: "Dubai", departDate: "" },
@@ -82,7 +84,10 @@ const flightSearchSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    setSearchResults: (state, action: PayloadAction<any[]>) => {
+    setSearchResults: (
+      state,
+      action: PayloadAction<{ [key: string]: Flight[] }>
+    ) => {
       state.searchResults = action.payload;
     },
     resetForm: (state) => {

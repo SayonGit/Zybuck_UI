@@ -7,6 +7,7 @@ import Button from "../common/Button";
 import type { Flight } from "../../types";
 import { useNavigation } from "../../hooks/useNavigation";
 import { totalPrices } from "@/services/globalServices";
+import { useSearchParams } from "react-router-dom";
 
 interface FlightCardProps {
   flight: Flight;
@@ -16,6 +17,7 @@ export const FlightCard = ({ flight }: FlightCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { goToCheckout } = useNavigation();
+  const [searchParams] = useSearchParams();
 
   const handleFlightSelect = async () => {
     if (isExpanded) {
@@ -29,27 +31,29 @@ export const FlightCard = ({ flight }: FlightCardProps) => {
     setTimeout(() => {
       setIsLoading(false);
       setIsExpanded(true);
-    }, 2000);
+    }, 1000);
   };
 
   const handleBookFlight = () => {
-    const params = new URLSearchParams();
-    params.set("from", flight.from);
-    params.set("to", flight.to);
-    params.set("date", flight.travelDate);
-    params.set("flightNumber", flight.flightNumber);
-    params.set("departureTime", flight.departure);
-    params.set("arrivalTime", flight.arrival);
-    params.set("price", flight.price.toString());
-    params.set("airline", flight.airline);
-    params.set("aircraft", flight.aircraft ?? "");
-    params.set("bookingClass", flight.bookingClass ?? "");
-    params.set("stops", flight.stops?.toString() ?? "0");
-    params.set("duration", flight.duration);
-    params.set("cabinBaggage", flight.baggage?.cabin ?? "");
-    params.set("checkinBaggage", flight.baggage?.checkin ?? "");
+    searchParams.set("from", flight.from);
+    searchParams.set("to", flight.to);
+    searchParams.set("date", flight.travelDate);
+    searchParams.set("flightNumber", flight.flightNumber);
+    searchParams.set("departureTime", flight.departure);
+    searchParams.set("arrivalTime", flight.arrival);
+    searchParams.set("price", flight.price.toString());
+    searchParams.set("airline", flight.airline);
+    searchParams.set("aircraft", flight.aircraft ?? "");
+    searchParams.set("bookingClass", flight.bookingClass ?? "");
+    searchParams.set("stops", flight.stops?.toString() ?? "0");
+    searchParams.set("duration", flight.duration);
+    searchParams.set("cabinBaggage", flight.baggage?.cabin ?? "");
+    searchParams.set("checkinBaggage", flight.baggage?.checkin ?? "");
+    searchParams.set("adults", searchParams.get("adults") ?? "");
+    searchParams.set("children", searchParams.get("children") ?? "");
+    searchParams.set("infants", searchParams.get("infants") ?? "");
 
-    goToCheckout(params);
+    goToCheckout(searchParams, flight);
   };
 
   return (
