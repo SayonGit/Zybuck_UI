@@ -188,7 +188,7 @@ const FlightForm: React.FC = () => {
               iconPosition="left"
               fullWidth={false}
               loading={isLoading}
-              className="h-input w-full md:min-w-[160px]"
+              className="h-input w-full md:min-w-[160px] bg-primary"
             >
               {isLoading ? "Searching..." : "Show Flights"}
             </Button>

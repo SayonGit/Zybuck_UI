@@ -92,7 +92,7 @@ export const FlightCard = ({ flight }: FlightCardProps) => {
             </p>
           </div>
           <Button
-            variant="secondary"
+            variant="primary"
             className="px-14"
             size="lg"
             onClick={handleBookFlight}

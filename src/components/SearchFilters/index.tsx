@@ -89,7 +89,7 @@ export const SearchFilters = ({
                 onClick={() => handleStopSelection("all")}
                 className={`flex-1 px-2 sm:px-3 py-2 text-xs border rounded transition-colors ${
                   selectedStop === "all"
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    ? "border-primary-500 bg-primary-50 text-primary-700"
                     : "border-gray-300 hover:bg-gray-50"
                 }`}
               >
@@ -99,7 +99,7 @@ export const SearchFilters = ({
                 onClick={() => handleStopSelection("direct")}
                 className={`flex-1 px-2 sm:px-3 py-2 text-xs border rounded transition-colors ${
                   selectedStop === "direct"
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    ? "border-primary-500 bg-primary-50 text-primary-700"
                     : "border-gray-300 hover:bg-gray-50"
                 }`}
               >
@@ -109,7 +109,7 @@ export const SearchFilters = ({
                 onClick={() => handleStopSelection("oneStop")}
                 className={`flex-1 px-2 sm:px-3 py-2 text-xs border rounded transition-colors ${
                   selectedStop === "oneStop"
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    ? "border-primary-500 bg-primary-50 text-primary-700"
                     : "border-gray-300 hover:bg-gray-50"
                 }`}
               >
@@ -176,7 +176,7 @@ export const SearchFilters = ({
             />
             <div className="relative h-2 bg-gray-200 rounded-lg">
               <div
-                className="absolute h-full bg-blue-600 rounded-lg"
+                className="absolute h-full bg-primary-200 rounded-lg"
                 style={{
                   left: `${(departureRange[0] / 24) * 100}%`,
                   width: `${
@@ -231,7 +231,7 @@ export const SearchFilters = ({
             />
             <div className="relative h-2 bg-gray-200 rounded-lg">
               <div
-                className="absolute h-full bg-blue-600 rounded-lg"
+                className="absolute h-full bg-primary-200 rounded-lg"
                 style={{
                   left: `${(arrivalRange[0] / 24) * 100}%`,
                   width: `${((arrivalRange[1] - arrivalRange[0]) / 24) * 100}%`,
@@ -259,7 +259,7 @@ export const SearchFilters = ({
                   onChange={() => {
                     handleAirlineSelection(airline.name);
                   }}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                  className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 cursor-pointer"
                 />
                 <span className="ml-2 text-xs sm:text-sm text-gray-700">
                   {airline.name}

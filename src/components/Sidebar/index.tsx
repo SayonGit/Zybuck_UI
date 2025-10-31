@@ -1,28 +1,26 @@
-import React from "react";
-import { X, Home, Search, Plane, Settings } from "lucide-react";
+import React, { useState } from "react";
+import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useConfig } from "@/context/configContext";
+import { useMenu } from "@/hooks/useMenu";
 
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  isOpen,
-  setIsOpen,
-}: SidebarProps) => {
-  const navItems = [
-    { name: "Dashboard", icon: <Home size={18} />, href: "/" },
-    { name: "Search Flights", icon: <Search size={18} />, href: "/search" },
-    { name: "Bookings", icon: <Plane size={18} />, href: "/bookings" },
-    { name: "Settings", icon: <Settings size={18} />, href: "/settings" },
-  ];
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+  const { config } = useConfig();
+  const { mainMenu } = useMenu();
+  const [expanded, setExpanded] = useState<number | null>(null);
+
+  const toggleExpand = (id: number) => {
+    setExpanded((prev) => (prev === id ? null : id));
+  };
 
   return (
     <div className="relative">
-      {/* Hamburger button */}
-
-      {/* Sidebar overlay for mobile */}
+      {/* Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -35,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Sidebar content */}
+      {/* Sidebar */}
       <AnimatePresence>
         {isOpen && (
           <motion.aside
@@ -45,63 +43,93 @@ const Sidebar: React.FC<SidebarProps> = ({
             exit={{ x: -250 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
           >
+            {/* Header */}
             <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-bold text-gray-800">Logo</h2>
+              <img
+                src={config?.logo}
+                alt={config?.site_title}
+                className="h-8 object-contain"
+              />
               <button onClick={() => setIsOpen(false)}>
                 <X size={20} />
               </button>
             </div>
 
+            {/* Menu */}
             <nav className="flex-1 overflow-y-auto mt-2">
               <ul className="space-y-1">
-                {navItems.map((item) => (
-                  <li key={item.name}>
-                    <a
-                      href={item.href}
-                      className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors"
-                      onClick={() => setIsOpen(false)}
+                {mainMenu?.map((item) => (
+                  <li key={item.id}>
+                    <div
+                      onClick={() =>
+                        item.children?.length
+                          ? toggleExpand(item.id)
+                          : setIsOpen(false)
+                      }
+                      className={`flex items-center justify-between px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary-600 transition-colors cursor-pointer ${
+                        expanded === item.id ? "bg-gray-50" : ""
+                      }`}
                     >
-                      <span className="mr-3">{item.icon}</span>
-                      {item.name}
-                    </a>
+                      <a
+                        href={item.url}
+                        className="flex-1"
+                        target="_self"
+                        rel="noopener noreferrer"
+                      >
+                        {item.title}
+                      </a>
+
+                      {item.children?.length > 0 && (
+                        <motion.div
+                          initial={false}
+                          animate={{ rotate: expanded === item.id ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          {expanded === item.id ? (
+                            <ChevronUp size={16} />
+                          ) : (
+                            <ChevronDown size={16} />
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Submenu */}
+                    <AnimatePresence>
+                      {expanded === item.id && item.children?.length > 0 && (
+                        <motion.ul
+                          className="ml-6 mt-1 space-y-1 border-l border-gray-200"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25 }}
+                        >
+                          {item.children.map((child) => (
+                            <li key={child.id}>
+                              <a
+                                href={child.url}
+                                className="block px-4 py-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 transition-colors rounded"
+                                onClick={() => setIsOpen(false)}
+                              >
+                                {child.title}
+                              </a>
+                            </li>
+                          ))}
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
                   </li>
                 ))}
               </ul>
             </nav>
 
-            <div className="border-t p-4 text-sm text-gray-500">
-              © 2025 FlySmart
+            {/* Footer */}
+            <div className="border-t p-4 text-sm text-gray-500 text-center">
+              © {new Date().getFullYear()} {config?.site_title || "FlySmart"}
             </div>
           </motion.aside>
         )}
       </AnimatePresence>
-
-      {/* Desktop sidebar */}
-      {/* <div className="hidden md:flex md:flex-col md:w-64 md:h-screen md:fixed md:left-0 md:top-0 md:bg-white md:shadow-sm">
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-bold text-gray-800">FlySmart</h2>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto mt-2">
-          <ul className="space-y-1">
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <a
-                  href={item.href}
-                  className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors"
-                >
-                  <span className="mr-3">{item.icon}</span>
-                  {item.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="border-t p-4 text-sm text-gray-500">
-          © 2025 FlySmart
-        </div>
-      </div> */}
     </div>
   );
 };

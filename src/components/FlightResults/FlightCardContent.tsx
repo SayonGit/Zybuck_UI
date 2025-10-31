@@ -209,7 +209,7 @@ export const FlightCardContent = ({
           onClick={onSelect}
           disabled={isLoading}
           variant="secondary"
-          className={`px-6 py-2 rounded-md transition-colors text-white w-full ${
+          className={`px-6 py-2 rounded-md transition-colors w-full ${
             isLoading ? "opacity-75 cursor-not-allowed" : ""
           }`}
         >

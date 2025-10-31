@@ -78,7 +78,7 @@ const PopularDestinationsGrid: React.FC = () => {
                 key={key}
                 className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all ${
                   activeTab === key
-                    ? "border border-blue-600 text-blue-600 rounded-full shadow-sm"
+                    ? "border border-primary-600 text-primary-600 rounded-full shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
                 onClick={() => handleTabChange(key as TabType)}
@@ -141,7 +141,7 @@ const PopularDestinationsGrid: React.FC = () => {
                   key={index}
                   className={`h-2 rounded-full transition-all duration-200 ${
                     index === currentPage
-                      ? "bg-blue-600 w-6"
+                      ? "bg-primary-600 w-6"
                       : "bg-gray-300 hover:bg-gray-400 w-2"
                   }`}
                   onClick={() => goToPage(index)}
@@ -153,7 +153,7 @@ const PopularDestinationsGrid: React.FC = () => {
 
         {/* Mobile See More Button */}
         <div className="text-center mt-6 sm:hidden">
-          <button className="text-blue-600 font-medium text-sm hover:text-blue-700 hover:underline">
+          <button className="text-primary-600 font-medium text-sm hover:text-primary-700 hover:underline">
             See more places
           </button>
         </div>

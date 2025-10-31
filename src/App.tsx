@@ -8,28 +8,37 @@ import NotFound from "./pages/NotFound";
 import SearchPage from "./pages/SearchPage";
 import { LoadingProvider } from "./context/LoadingContext";
 import Checkout from "./pages/Checkout";
+import ConfigProvider from "./providers/configProviders";
+import { useDynamicTheme } from "./hooks/useDynamicTheme";
 
-function App() {
+function AppContent() {
+  // ✅ Move hook here — now inside provider
+  useDynamicTheme();
+
   return (
-    <LoadingProvider>
-      <Router>
-        <Routes>
-          {/* All routes with layout */}
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="search" element={<SearchPage />} />
-            <Route path="details/:id" element={<DetailsPage />} />
-            <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="/checkout" element={<Checkout />} />
-            {/* Catch all unmatched routes within the layout */}
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </Router>
-    </LoadingProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="search" element={<SearchPage />} />
+          <Route path="details/:id" element={<DetailsPage />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ConfigProvider>
+      <LoadingProvider>
+        <AppContent />
+      </LoadingProvider>
+    </ConfigProvider>
+  );
+}

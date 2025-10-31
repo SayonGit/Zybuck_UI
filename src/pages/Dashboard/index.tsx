@@ -13,7 +13,6 @@ import PopularDestinationsCarousel from "../../components/PopularDestinationsCar
 const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
 
-  // Scroll to form when tab is specified in URL
   useEffect(() => {
     const tab = searchParams.get("tab");
     if (tab) {

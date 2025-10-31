@@ -161,7 +161,7 @@ const FlightDealsCarousel: React.FC = () => {
             <button
               className={`px-6 py-3 font-medium text-sm transition-all duration-200 cursor-pointer border-b-2 ${
                 activeTab === "international"
-                  ? "text-blue-600 border-blue-600"
+                  ? "text-primary-600 border-primary-600"
                   : "text-gray-600 hover:text-gray-900 border-transparent hover:border-gray-300"
               }`}
               onClick={() => handleTabChange("international")}
@@ -171,7 +171,7 @@ const FlightDealsCarousel: React.FC = () => {
             <button
               className={`px-6 py-3 font-medium text-sm transition-all duration-200 cursor-pointer border-b-2 ${
                 activeTab === "domestic"
-                  ? "text-blue-600 border-blue-600"
+                  ? "text-primary-600 border-primary-600"
                   : "text-gray-600 hover:text-gray-900 border-transparent hover:border-gray-300"
               }`}
               onClick={() => handleTabChange("domestic")}

@@ -60,7 +60,7 @@ const FormControl: React.FC = () => {
                     <button
                       className={`flex flex-col items-center p-3 sm:p-4 rounded-xl transition-colors ${
                         activeTab === tab.id
-                          ? "bg-red-400 shadow-sm text-white"
+                          ? "bg-[#ff690f] hover:bg-[#ff4538] shadow-sm text-white"
                           : "text-gray-600 bg-white hover:bg-white/50"
                       }`}
                       onClick={() => handleTabChange(tab.id as TabTypes)}

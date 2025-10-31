@@ -1,53 +1,37 @@
-/*  src/components/common/Footer.tsx  */
 import React from "react";
 import { Icon } from "@iconify/react";
-
-const columns = [
-  {
-    title: "Company",
-    links: ["About", "Careers", "Mobile", "Blog", "How we work"],
-  },
-  {
-    title: "Contact",
-    links: [
-      "Help/FAQ",
-      "Press",
-      "Affiliates",
-      "Hotel owners",
-      "Partners",
-      "Advertise with us",
-    ],
-  },
-  {
-    title: "More",
-    links: [
-      "Airline fees",
-      "Airlines",
-      "Low fare tips",
-      "Badges & Certificates",
-      "Security",
-    ],
-  },
-] as const;
+import { useMenu } from "@/hooks/useMenu";
+import { useConfig } from "@/context/configContext";
 
 const Footer: React.FC = () => {
+  const { footer, socialMenu } = useMenu();
+  const { config } = useConfig();
+
+  const footerColumns = [footer.footer1, footer.footer2, footer.footer3].filter(
+    Boolean
+  );
+
   return (
     <footer className="bg-neutral-50 text-gray-700 border-t border-gray-200">
-      {/* top area */}
+      {/* Top Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid gap-8 md:grid-cols-4">
-          {/* link columns */}
-          {columns.map(({ title, links }) => (
-            <div key={title}>
-              <h4 className="mb-4 font-semibold text-gray-900">{title}</h4>
+          {/* Dynamic Footer Columns */}
+          {footerColumns.map((col, i) => (
+            <div key={i}>
+              <h4 className="mb-4 font-semibold text-gray-900">
+                {col?.heading}
+              </h4>
               <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link}>
+                {col?.footer_menu?.map((link: any) => (
+                  <li key={link.title}>
                     <a
-                      href="#"
-                      className="text-sm hover:text-blue-600 transition-colors"
+                      href={link.url || "#"}
+                      className="text-sm hover:text-primary-600 transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      {link}
+                      {link.title}
                     </a>
                   </li>
                 ))}
@@ -55,7 +39,7 @@ const Footer: React.FC = () => {
             </div>
           ))}
 
-          {/* app badges */}
+          {/* App Store / Play Store Section */}
           <div>
             <h4 className="mb-4 font-semibold text-gray-900">Get this app</h4>
             <div className="space-y-5">
@@ -80,42 +64,45 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      {/* bottom bar */}
+      {/* Bottom Bar */}
       <div className="border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* copyright */}
-          <p className="text-sm text-gray-500">© 2025 COMPANY</p>
+          <p className="text-sm text-gray-500">{config?.footer_copyright}</p>
 
-          {/* socials */}
           <div className="flex items-center gap-5">
-            <a
+            {socialMenu.map((item) => (
+              <a
+                href={item.url}
+                aria-label={item.title}
+                className="text-gray-500 hover:text-primary-600 transition-colors"
+              >
+                <Icon
+                  icon={`mdi:${item.title?.toLowerCase()}`}
+                  className="w-5 h-5"
+                />
+              </a>
+            ))}
+            {/* <a
               href="#"
-              aria-label="Facebook"
-              className="text-gray-500 hover:text-blue-600 transition-colors"
-            >
-              <Icon icon="mdi:facebook" className="w-5 h-5" />
-            </a>
-            <a
-              href="#"
-              aria-label="X / Twitter"
-              className="text-gray-500 hover:text-blue-600 transition-colors"
+              aria-label="Twitter"
+              className="text-gray-500 hover:text-primary-600 transition-colors"
             >
               <Icon icon="mdi:twitter" className="w-5 h-5" />
             </a>
             <a
               href="#"
               aria-label="YouTube"
-              className="text-gray-500 hover:text-blue-600 transition-colors"
+              className="text-gray-500 hover:text-primary-600 transition-colors"
             >
               <Icon icon="mdi:youtube" className="w-5 h-5" />
             </a>
             <a
               href="#"
               aria-label="Instagram"
-              className="text-gray-500 hover:text-blue-600 transition-colors"
+              className="text-gray-500 hover:text-primary-600 transition-colors"
             >
               <Icon icon="mdi:instagram" className="w-5 h-5" />
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
