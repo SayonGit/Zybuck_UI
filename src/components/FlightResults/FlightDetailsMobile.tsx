@@ -6,9 +6,13 @@ import type { Flight } from "../../types";
 
 interface FlightDetailsMobileProps {
   flight: Flight;
+  tripStatus: string;
 }
 
-export const FlightDetailsMobile = ({ flight }: FlightDetailsMobileProps) => {
+export const FlightDetailsMobile = ({
+  flight,
+  tripStatus,
+}: FlightDetailsMobileProps) => {
   // Helper function to render amenities
   const renderAmenities = () => {
     const amenityItems = [];
@@ -67,7 +71,7 @@ export const FlightDetailsMobile = ({ flight }: FlightDetailsMobileProps) => {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <h4 className="font-semibold text-sm">
-              Depart • {formatDate(new Date(flight.travelDate))}
+              {tripStatus} • {formatDate(new Date(flight.travelDate))}
             </h4>
             <h5 className="text-sm">{flight.duration}</h5>
           </div>

@@ -1,28 +1,33 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import DestinationCard from "./DestinationCard";
-import { useAppData } from "../../hooks/useAppData";
+// import { useAppData } from "../../hooks/useAppData";
+import { useConfig } from "@/context/configContext";
+import { useCarousels } from "@/hooks/useCarousel";
 
 type TabType = "popular" | "cities" | "countries" | "regions" | "airports";
 
 const PopularDestinationsGrid: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("popular");
   const [currentPage, setCurrentPage] = useState(0);
+  const { data: carouselData } = useCarousels();
 
   // Get popular destinations from Redux store
-  const { popularDestinations } = useAppData();
+  // const { popularDestinations } = useAppData();
+  const { config } = useConfig();
 
   // Filter destinations based on active tab
-  const filteredDestinations = popularDestinations.filter(
-    (dest: any) => dest.category === activeTab
-  );
+  const filteredDestinations =
+    carouselData?.popular_destinations?.filter(
+      (dest: any) => dest.category === activeTab
+    ) || [];
 
   // 9 cards per page (3x3 grid)
   const itemsPerPage = 9;
-  const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredDestinations!.length / itemsPerPage);
 
   // Get current page destinations
-  const currentDestinations = filteredDestinations.slice(
+  const currentDestinations = filteredDestinations!.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
@@ -59,15 +64,27 @@ const PopularDestinationsGrid: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div className="mb-4 sm:mb-0">
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-              Plan your perfect trip
+              {config?.popular_destinations?.heading ||
+                "Plan your perfect trip"}
             </h2>
             <p className="text-gray-600">
-              Search Flights & Places Hire to our most popular destinations
+              {config?.popular_destinations?.sub_heading ||
+                "Search Flights & Places Hire to our most popular destinations"}
             </p>
           </div>
-          <button className="text-blue-600 font-medium text-sm hover:text-blue-700 hover:underline self-start sm:self-center">
-            See more places
-          </button>
+          {config?.popular_destinations.is_button && (
+            <button
+              onClick={() => {
+                // Navigate to popular destinations page
+                window.location.href =
+                  config?.popular_destinations?.btn_url ||
+                  "/popular-destinations";
+              }}
+              className="text-blue-600 font-medium text-sm hover:text-blue-700 hover:underline self-start sm:self-center"
+            >
+              {config?.popular_destinations?.btn_text || "See more places"}
+            </button>
+          )}
         </div>
 
         {/* Navigation Tabs */}

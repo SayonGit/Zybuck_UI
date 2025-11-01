@@ -6,9 +6,13 @@ import type { Flight } from "../../types";
 
 interface FlightDetailsDesktopProps {
   flight: Flight;
+  tripStatus: string;
 }
 
-export const FlightDetailsDesktop = ({ flight }: FlightDetailsDesktopProps) => {
+export const FlightDetailsDesktop = ({
+  flight,
+  tripStatus,
+}: FlightDetailsDesktopProps) => {
   const renderAmenities = () => {
     const amenities = [];
 
@@ -101,7 +105,7 @@ export const FlightDetailsDesktop = ({ flight }: FlightDetailsDesktopProps) => {
           {/* Header */}
           <div className="flex justify-between">
             <h4 className="font-semibold">
-              Depart • {formatDate(new Date(flight.travelDate))}
+              {tripStatus} • {formatDate(new Date(flight.travelDate))}
             </h4>
             <h5>{flight.duration}</h5>
           </div>
