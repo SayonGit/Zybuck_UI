@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import TrendingCities from "./TrendingCitiesCard";
-import { useAppData } from "../../hooks/useAppData";
+// import { useAppData } from "../../hooks/useAppData";
 import { SWIPE_THRESHOLD } from "../../utils/constants";
+import { useConfig } from "@/context/configContext";
+import { useCarousels } from "@/hooks/useCarousel";
 
 interface TrendingCities {
   id: string;
@@ -22,22 +24,23 @@ const TrendingCitiesCarousel: React.FC = () => {
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   // Get trending cities from Redux store
-  const { trendingCities } = useAppData();
-
+  // const { trendingCities } = useAppData();
+  const { config } = useConfig();
+  const { data: carouselData } = useCarousels();
   // Transform Redux data to match component interface
-  const allTrendingCities: TrendingCities[] = trendingCities.map(
-    (city: any) => ({
-      id: city.id.toString(),
-      destination: city.name,
-      route: `${city.name}, ${city.country}`,
-      price: `$${city.deals}`, // Using deals count as price for demo
-      duration: "Trending",
-      dates: "Popular destination",
-      image: city.image,
-      isRoundTrip: true,
-      type: "international", // Default to international
-    })
-  );
+  const allTrendingCities: TrendingCities[] = (
+    carouselData?.trending_cities ?? []
+  ).map((city: any) => ({
+    id: city.id.toString(),
+    destination: city.name,
+    route: `${city.name}, ${city.country}`,
+    price: `$${city.deals}`, // Using deals count as price for demo
+    duration: "Trending",
+    dates: "Popular destination",
+    image: city.image,
+    isRoundTrip: true,
+    type: "international", // Default to international
+  }));
 
   const itemsPerView = {
     mobile: 1,
@@ -119,15 +122,27 @@ const TrendingCitiesCarousel: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
           <div className="text-left mb-6 lg:mb-0">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-              Trending Cities
+              {config?.trending_cities?.heading || "Trending Cities"}
             </h2>
-            <p className="text-gray-600">Popular destinations travelers love</p>
+            <p className="text-gray-600">
+              {config?.trending_cities?.sub_heading ||
+                "Popular destinations travelers love"}
+            </p>
           </div>
 
           {/* See All Button */}
-          <button className="text-blue-600 font-medium text-sm hover:text-blue-700 hover:underline self-start lg:self-center">
-            See All
-          </button>
+          {config?.trending_cities.is_button && (
+            <button
+              onClick={() => {
+                // Navigate to trending cities page
+                window.location.href =
+                  config?.trending_cities?.btn_url || "/trending-cities";
+              }}
+              className="text-blue-600 font-medium text-sm hover:text-blue-700 hover:underline self-start lg:self-center"
+            >
+              {config?.trending_cities?.btn_text || "See All"}
+            </button>
+          )}
         </div>
 
         {/* Carousel Container */}

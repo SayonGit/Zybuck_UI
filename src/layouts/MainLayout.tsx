@@ -16,6 +16,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   showFooter = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="min-h-screen">
       <ToastContainer position="bottom-right" autoClose={3000} />

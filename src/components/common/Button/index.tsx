@@ -31,9 +31,9 @@ const Button: React.FC<ButtonProps> = ({
   // Variant styles
   const variantStyles = {
     primary:
-      "bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500",
+      "bg-primary-500 text-white hover:bg-primary-500 focus:ring-primary-500",
     secondary:
-      "bg-secondary-600 bg-opacity-10 text-primary-600 hover:bg-secondary-700 focus:ring-secondary-500",
+      "bg-secondary-200 bg-opacity-10 text-secondary-600 hover:bg-secondary-300 focus:ring-secondary-500",
     outlined:
       "border border-primary-600 text-primary-600 bg-transparent hover:bg-primary-50 focus:ring-primary-500",
     ghost: "text-gray-600 bg-transparent hover:bg-gray-100 focus:ring-gray-500",
@@ -41,7 +41,7 @@ const Button: React.FC<ButtonProps> = ({
   };
   const variantStylesText = {
     primary: "text-white",
-    secondary: "text-primary-600",
+    secondary: "text-secondary-600",
     outlined: "text-primary-600",
     ghost: "text-gray-600",
     danger: "text-white",

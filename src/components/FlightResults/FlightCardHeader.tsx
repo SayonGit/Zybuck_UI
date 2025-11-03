@@ -14,7 +14,7 @@ interface FlightCardHeaderProps {
 export const getStatusColor = (dealType: string) => {
   switch (dealType) {
     case "Best":
-      return "bg-blue-100 text-blue-500";
+      return "bg-primary-100 text-primary-500";
     case "Recommended":
       return "bg-yellow-100 text-yellow-500";
     case "Cheapest":

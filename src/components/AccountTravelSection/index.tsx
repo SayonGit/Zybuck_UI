@@ -17,10 +17,10 @@ const AccountTravelSection: React.FC = () => (
           Sign in to book faster and manage your trip with ease
         </p>
         <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
-          <button className="px-6 py-3 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition">
+          <button className="px-6 py-3 bg-primary-600 text-white rounded-md text-sm font-medium hover:bg-primary-700 transition">
             Sign in
           </button>
-          <button className="px-6 py-3 border border-blue-600 text-blue-600 rounded-md text-sm font-medium hover:bg-blue-50 transition">
+          <button className="px-6 py-3 border border-primary-600 text-primary-600 rounded-md text-sm font-medium hover:bg-primary-50 transition">
             Register
           </button>
         </div>
@@ -28,7 +28,7 @@ const AccountTravelSection: React.FC = () => (
       <div className="mt-8 lg:mt-0 flex justify-end">
         <Icon
           icon="streamline-emojis:wrapped-gift-2"
-          className="w-20 h-20 text-blue-100"
+          className="w-20 h-20 text-primary-100"
           aria-hidden="true"
         />
       </div>

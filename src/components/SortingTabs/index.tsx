@@ -75,7 +75,7 @@ export const SortingTabs = ({
             onClick={() => setSortBy(tab.id as SortKey)}
             className={`flex-1 min-w-0 p-2 sm:p-4 text-center transition-colors relative ${
               sortBy === tab.id
-                ? "text-blue-600 bg-blue-50"
+                ? "text-primary-600 bg-primary-50"
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             }`}
           >
@@ -89,7 +89,7 @@ export const SortingTabs = ({
               <span className="sm:hidden">{tab.price}</span>
             </div>
             {sortBy === tab.id && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"></div>
             )}
           </button>
         ))}

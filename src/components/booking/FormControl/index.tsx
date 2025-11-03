@@ -6,31 +6,24 @@ import InfiniteScrollImages from "../../InfiniteImageScroll";
 import HotelForm from "../HotelForm";
 import CarForm from "../CarForm";
 import { useAppData } from "../../../hooks/useAppData";
+import { useConfig } from "@/context/configContext";
+import { useCarousels } from "@/hooks/useCarousel";
 
 type TabTypes = "flights" | "stay" | "car";
 
 const FormControl: React.FC = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabTypes>("flights");
 
-  // Get data from Redux store
-  const { tabs, scrollingImages } = useAppData();
+  const { tabs } = useAppData();
+  const { config } = useConfig();
+  const { data: carouselData } = useCarousels();
 
-  // useEffect(() => {
-  //   const tabFromUrl = searchParams.get("tab") as TabTypes;
-  //   if (tabFromUrl && tabs.some((tab) => tab.id === tabFromUrl)) {
-  //     setActiveTab(tabFromUrl);
-  //   }
-  // }, [searchParams, tabs]);
-
-  const handleTabChange = (tabId: TabTypes) => {
-    // Prevent any default scrolling behavior
+  const handleTabChange = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    tabId: TabTypes
+  ) => {
     event?.preventDefault();
-
     setActiveTab(tabId);
-    // const newSearchParams = new URLSearchParams(searchParams);
-    // newSearchParams.set("tab", tabId);
-    // setSearchParams(newSearchParams, { replace: true });
   };
 
   return (
@@ -42,10 +35,10 @@ const FormControl: React.FC = () => {
             {/* Title Section */}
             <div className="mb-6 sm:mb-8">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2">
-                Explore top flight deals
+                {config?.hero_banner.heading}
               </h1>
               <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
-                Special offers to suit your plan
+                {config?.hero_banner.sub_heading}
               </p>
             </div>
 
@@ -60,10 +53,12 @@ const FormControl: React.FC = () => {
                     <button
                       className={`flex flex-col items-center p-3 sm:p-4 rounded-xl transition-colors ${
                         activeTab === tab.id
-                          ? "bg-red-400 shadow-sm text-white"
+                          ? "bg-[#ff690f] hover:bg-[#ff4538] shadow-sm text-white"
                           : "text-gray-600 bg-white hover:bg-white/50"
                       }`}
-                      onClick={() => handleTabChange(tab.id as TabTypes)}
+                      onClick={(event) =>
+                        handleTabChange(event, tab.id as TabTypes)
+                      }
                       // Prevent focus-related scrolling
                       onFocus={(e) => e.preventDefault()}
                     >
@@ -93,7 +88,7 @@ const FormControl: React.FC = () => {
           {/* Right Column - Image Gallery */}
           <div className="xl:col-span-1 hidden xl:block">
             <InfiniteScrollImages
-              images={scrollingImages}
+              images={carouselData?.scrolling_images || []}
               speed={30}
               direction="down"
               className="h-full"

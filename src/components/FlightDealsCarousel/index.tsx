@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import FlightDealCard from "./FlightDealCard";
-import { useAppData } from "../../hooks/useAppData";
+// import { useAppData } from "../../hooks/useAppData";
 import { SWIPE_THRESHOLD } from "../../utils/constants";
+import { useConfig } from "@/context/configContext";
+import { useCarousels } from "@/hooks/useCarousel";
 
 interface FlightDeal {
   id: string;
@@ -25,20 +27,24 @@ const FlightDealsCarousel: React.FC = () => {
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   // Get flight deals from Redux store
-  const { flightDeals } = useAppData();
+  // const { flightDeals } = useAppData();
+  const { config } = useConfig();
+  const { data: carouselData } = useCarousels();
 
   // Transform Redux data to match component interface
-  const allFlightDeals: FlightDeal[] = flightDeals.map((deal: any) => ({
-    id: deal.id.toString(),
-    destination: deal.to,
-    route: `${deal.from} to ${deal.to}`,
-    price: `$${deal.price}`,
-    duration: `${deal.departure} - ${deal.return}`,
-    dates: "Round-trip",
-    image: deal.image,
-    isRoundTrip: true,
-    type: deal.type || "international",
-  }));
+  const allFlightDeals: FlightDeal[] = (carouselData?.flight_deals ?? []).map(
+    (deal: any) => ({
+      id: deal.id.toString(),
+      destination: deal.to,
+      route: `${deal.from} to ${deal.to}`,
+      price: `$${deal.price}`,
+      duration: `${deal.departure} - ${deal.return}`,
+      dates: "Round-trip",
+      image: deal.image,
+      isRoundTrip: true,
+      type: deal.type || "international",
+    })
+  );
 
   // Filter deals based on active tab
   const filteredFlightDeals = allFlightDeals.filter(
@@ -142,17 +148,27 @@ const FlightDealsCarousel: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
           <div className="text-left mb-6 lg:mb-0">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-              Top Flight Deals Near You
+              {config?.flight_deals?.heading || "Top Flight Deals Near You"}
             </h2>
             <p className="text-gray-600">
-              What people says about Globie facilities
+              {config?.flight_deals?.sub_heading ||
+                "What people says about Globie facilities"}
             </p>
           </div>
 
           {/* See All Button */}
-          <button className="text-blue-600 font-medium text-sm hover:text-blue-700 hover:underline self-start lg:self-center">
-            See All
-          </button>
+          {config?.flight_deals.is_button && (
+            <button
+              onClick={() => {
+                // Navigate to flight deals page
+                window.location.href =
+                  config?.flight_deals?.btn_url || "/flight-deals";
+              }}
+              className="text-blue-600 font-medium text-sm hover:text-blue-700 hover:underline self-start lg:self-center"
+            >
+              {config?.flight_deals?.btn_text || "See All"}
+            </button>
+          )}
         </div>
 
         {/* Tab Bar - Between Title and Carousel */}
@@ -161,7 +177,7 @@ const FlightDealsCarousel: React.FC = () => {
             <button
               className={`px-6 py-3 font-medium text-sm transition-all duration-200 cursor-pointer border-b-2 ${
                 activeTab === "international"
-                  ? "text-blue-600 border-blue-600"
+                  ? "text-primary-600 border-primary-600"
                   : "text-gray-600 hover:text-gray-900 border-transparent hover:border-gray-300"
               }`}
               onClick={() => handleTabChange("international")}
@@ -171,7 +187,7 @@ const FlightDealsCarousel: React.FC = () => {
             <button
               className={`px-6 py-3 font-medium text-sm transition-all duration-200 cursor-pointer border-b-2 ${
                 activeTab === "domestic"
-                  ? "text-blue-600 border-blue-600"
+                  ? "text-primary-600 border-primary-600"
                   : "text-gray-600 hover:text-gray-900 border-transparent hover:border-gray-300"
               }`}
               onClick={() => handleTabChange("domestic")}

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./index.scss";
 import { useLogin } from "../../../hooks/useLogin";
+import { useConfig } from "@/context/configContext";
 
 const Header: React.FC = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -11,6 +12,8 @@ const Header: React.FC = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const popupRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { config } = useConfig();
 
   const handleClosePopup = () => {
     setShowLoginPopup(false);
@@ -50,7 +53,11 @@ const Header: React.FC = () => {
           to="/"
           className="md:text-2xl text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors"
         >
-          Company Logo
+          <img
+            src={config?.logo}
+            alt={config?.site_title}
+            className="h-8 object-contain"
+          />
         </Link>
       </div>
 
