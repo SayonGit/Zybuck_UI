@@ -9,9 +9,18 @@ import AccountTravelSection, {
   FeatureItemContainer,
 } from "../../components/AccountTravelSection";
 import PopularDestinationsCarousel from "../../components/PopularDestinationsCarousel";
+import { usePageContent } from "../DynamicPage/usePageContent";
 
 const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const { fetchContent, pageContent, error } = usePageContent();
+
+  useEffect(() => {
+    if (error) {
+      return;
+    }
+    fetchContent("home");
+  }, [error]);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -41,6 +50,7 @@ const Dashboard: React.FC = () => {
       <FeatureItemContainer />
       <div className="container lg:px-0 px-2">
         <PopularDestinationsCarousel />
+        <div dangerouslySetInnerHTML={{ __html: pageContent?.content || "" }} />
       </div>
     </>
   );

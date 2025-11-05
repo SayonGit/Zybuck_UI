@@ -13,8 +13,8 @@ export const LoadingSpinner: FC = () => (
         ></div>
       </div>
     </div>
-    <p className="mt-4 text-lg text-gray-600 font-medium tracking-wider">
-      Loading Page Content...
-    </p>
+    {/* <p className="mt-4 text-lg text-gray-600 font-medium tracking-wider">
+      Loading...
+    </p> */}
   </div>
 );

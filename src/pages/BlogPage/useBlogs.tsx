@@ -1,4 +1,4 @@
-import { fetchAllBlogs } from "@/api/blogApiService";
+import { fetchAllBlogs, fetchSlugBlogs } from "@/api/blogApiService";
 import { useCallback, useEffect, useState } from "react";
 
 export interface BlogResponse {
@@ -52,33 +52,60 @@ export interface UseBlogsResult {
   loading: boolean;
   error: Error | null;
   handleLoadMore: () => void;
+  singleBlog: Daum | null;
 }
 
-export default function useBlogs(): UseBlogsResult {
+export default function useBlogs(blogSlug?: string): UseBlogsResult {
   const [data, setData] = useState<BlogResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [singleBlog, setSingleBlog] = useState<Daum | null>(null);
 
   useEffect(() => {
-    const fetchAllPages = async () => {
-      setLoading(true);
-      setError(null);
+    if (!blogSlug) {
+      const fetchAllPages = async () => {
+        setLoading(true);
+        setError(null);
 
-      try {
-        const allData = await fetchAllBlogs();
-        if (data?.posts.data) {
-          allData.posts.data = [...data.posts.data, ...allData.posts.data];
+        try {
+          const allData = await fetchAllBlogs();
+          if (data?.posts.data) {
+            allData.posts.data = [...data.posts.data, ...allData.posts.data];
+          }
+          setData(allData);
+        } catch (err: any) {
+          if (err.name !== "CanceledError" && err.name !== "AbortError")
+            setError(err);
+        } finally {
+          setLoading(false);
         }
-        setData(allData);
-      } catch (err: any) {
-        if (err.name !== "CanceledError" && err.name !== "AbortError")
-          setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAllPages();
-  }, []);
+      };
+
+      fetchAllPages();
+    }
+  }, [blogSlug]);
+  useEffect(() => {
+    if (blogSlug) {
+      const fetchSlugPages = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+          const singleData = await fetchSlugBlogs(blogSlug);
+          if (singleData) {
+            setSingleBlog(singleData);
+          }
+        } catch (err: any) {
+          if (err.name !== "CanceledError" && err.name !== "AbortError")
+            setError(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchSlugPages();
+    }
+  }, [blogSlug]);
 
   const handleLoadMore = useCallback(() => {
     if (data?.posts.next_page_url) {
@@ -86,5 +113,5 @@ export default function useBlogs(): UseBlogsResult {
     }
   }, []);
 
-  return { data, loading, error, handleLoadMore };
+  return { data, loading, error, handleLoadMore, singleBlog };
 }

@@ -1,12 +1,12 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-import { useMenu } from "@/hooks/useMenu";
 import { useConfig } from "@/context/configContext";
+import { useMenu } from "@/hooks/useHomeUtilities";
 
 const Footer: React.FC = () => {
   const { footer, socialMenu } = useMenu();
   const { config } = useConfig();
-
+  console.log("Footer config:", footer, socialMenu, config);
   const footerColumns = [footer.footer1, footer.footer2, footer.footer3].filter(
     Boolean
   );
@@ -23,8 +23,8 @@ const Footer: React.FC = () => {
                 {col?.heading}
               </h4>
               <ul className="space-y-2">
-                {col?.footer_menu?.map((link: any) => (
-                  <li key={link.title}>
+                {col?.footer_menu?.map((link: any, index) => (
+                  <li key={index}>
                     <a
                       href={link.url || "#"}
                       className="text-sm hover:text-primary-600 transition-colors"
@@ -70,11 +70,12 @@ const Footer: React.FC = () => {
           <p className="text-sm text-gray-500">{config?.footer_copyright}</p>
 
           <div className="flex items-center gap-5">
-            {socialMenu.map((item) => (
+            {socialMenu.map((item, index) => (
               <a
                 href={item.url}
                 aria-label={item.title}
                 className="text-gray-500 hover:text-primary-600 transition-colors"
+                key={index}
               >
                 <Icon
                   icon={`mdi:${item.title?.toLowerCase()}`}

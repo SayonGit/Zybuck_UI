@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import type { Daum } from "./useBlogs";
 import { formatDate } from "@/services/globalServices";
+import { Link } from "react-router-dom";
 
 export const BlogPostCard: FC<{ post: Daum }> = ({ post }) => (
   <article className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col h-full">
@@ -39,9 +40,9 @@ export const BlogPostCard: FC<{ post: Daum }> = ({ post }) => (
 
       {/* Read More Link */}
       <div className="mt-4 pt-4 border-t border-gray-100">
-        <a
-          href={`/blog/${post.slug}`}
-          onClick={(e) => e.preventDefault()}
+        <Link
+          to={`/blogs/${post.slug}`}
+          // onClick={(e) => e.preventDefault()}
           className="text-blue-600 font-semibold text-sm hover:text-blue-700 transition-colors flex items-center"
         >
           Read More
@@ -59,7 +60,7 @@ export const BlogPostCard: FC<{ post: Daum }> = ({ post }) => (
               d="M17 8l4 4m0 0l-4 4m4-4H3"
             ></path>
           </svg>
-        </a>
+        </Link>
       </div>
     </div>
   </article>

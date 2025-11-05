@@ -12,6 +12,7 @@ import ConfigProvider from "./providers/configProviders";
 import { useDynamicTheme } from "./hooks/useDynamicTheme";
 import { DynamicPage } from "./pages/DynamicPage";
 import { BlogPage } from "./pages/BlogPage";
+import { BlogDetail } from "./pages/BlogDetail";
 
 function AppContent() {
   useDynamicTheme();
@@ -31,6 +32,7 @@ function AppContent() {
           <Route path="/checkout" element={<Checkout />} />
         </Route>
         <Route path="/blogs" element={<BlogPage />} />
+        <Route path="/blogs/:id" element={<BlogDetail />} />
         <Route path="not-found" element={<NotFound />} />
         <Route path="/:pageName" element={<DynamicPage />} />
       </Routes>

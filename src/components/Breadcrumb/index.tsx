@@ -1,6 +1,7 @@
 import type { FC } from "react";
+import { Link } from "react-router-dom";
 
-// Define the type for a single breadcrumb item
+// Define the type for Link single breadcrumb item
 export interface BreadcrumbItem {
   label: string;
   href: string;
@@ -18,8 +19,8 @@ export const Breadcrumb: FC<{ items: BreadcrumbItem[] }> = ({ items }) => {
           return (
             <li key={item.label} className="flex items-center">
               <div className="flex items-center">
-                <a
-                  href={item.href}
+                <Link
+                  to={item.href}
                   className={`text-sm font-medium transition-colors ${
                     isCurrent
                       ? "text-yellow-400 cursor-default"
@@ -29,7 +30,7 @@ export const Breadcrumb: FC<{ items: BreadcrumbItem[] }> = ({ items }) => {
                   onClick={(e) => isCurrent && e.preventDefault()}
                 >
                   {item.label}
-                </a>
+                </Link>
 
                 {/* Separator icon (not shown for the last item) */}
                 {!isCurrent && (
