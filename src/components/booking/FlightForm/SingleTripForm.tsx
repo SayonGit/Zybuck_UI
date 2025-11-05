@@ -33,33 +33,57 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
 
   const renderSuggestions = (
     suggestions: ReturnType<typeof useAirportSearch>["suggestions"],
-    type: "from" | "to"
-  ) =>
-    suggestions.length > 0 && (
-      <ul className="absolute z-50 bg-white border rounded-lg mt-1 w-full shadow-lg max-h-56 overflow-y-auto">
-        {suggestions.map((item, i) => (
-          <li
-            key={`${item.airportCode}-${i}`}
-            tabIndex={0}
-            className="p-2 hover:bg-gray-100 cursor-pointer transition-all duration-150"
-            onClick={() =>
-              handleSelect(type, `${item.city} (${item.airportCode})`)
-            }
-            onKeyDown={(e) =>
-              e.key === "Enter" &&
-              handleSelect(type, `${item.city} (${item.airportCode})`)
-            }
-          >
-            <div className="text-sm font-medium text-gray-800">
-              {item.city} ({item.airportCode})
-            </div>
-            <div className="text-xs text-gray-500">
-              {item.airportName}, {item.country}
-            </div>
-          </li>
-        ))}
-      </ul>
+    type: "from" | "to",
+    loading: boolean,
+    error?: string
+  ) => {
+    // if (formData[type] === "") return null;
+    return (
+      <div className="absolute z-50 bg-white rounded-lg mt-1 w-full shadow-lg max-h-56 overflow-y-auto">
+        {loading && (
+          <div className="flex justify-center items-center py-4 text-gray-500">
+            <Icon
+              icon="eos-icons:loading"
+              className="w-5 h-5 animate-spin mr-2"
+            />
+            <span className="text-sm">Loading...</span>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="text-red-500 text-sm p-3 text-center border-t">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && suggestions.length > 0 && (
+          <ul className="border rounded-lg ">
+            {suggestions.map((item, i) => (
+              <li
+                key={`${item.airportCode}-${i}`}
+                tabIndex={0}
+                className="p-2 hover:bg-gray-100 cursor-pointer transition-all duration-150"
+                onClick={() =>
+                  handleSelect(type, `${item.city} (${item.airportCode})`)
+                }
+                onKeyDown={(e) =>
+                  e.key === "Enter" &&
+                  handleSelect(type, `${item.city} (${item.airportCode})`)
+                }
+              >
+                <div className="text-sm font-medium text-gray-800">
+                  {item.city} ({item.airportCode})
+                </div>
+                <div className="text-xs text-gray-500">
+                  {item.airportName}, {item.country}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     );
+  };
 
   const swapLocations = () => {
     const currentFrom = formData.from;
@@ -93,7 +117,12 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(fromSearch.suggestions, "from")}
+            {renderSuggestions(
+              fromSearch.suggestions,
+              "from",
+              fromSearch.loading,
+              fromSearch.error
+            )}
           </div>
 
           <div className="flex items-center px-2">
@@ -124,7 +153,12 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(toSearch.suggestions, "to")}
+            {renderSuggestions(
+              toSearch.suggestions,
+              "to",
+              toSearch.loading,
+              toSearch.error
+            )}
           </div>
         </div>
       </div>
@@ -152,7 +186,12 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(fromSearch.suggestions, "from")}
+            {renderSuggestions(
+              fromSearch.suggestions,
+              "from",
+              fromSearch.loading,
+              fromSearch.error
+            )}
           </div>
           <div className="flex items-center mx-auto px-2">
             <img src={InputDividerIcon} className="w-4 h-4" />
@@ -177,7 +216,12 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(toSearch.suggestions, "to")}
+            {renderSuggestions(
+              toSearch.suggestions,
+              "to",
+              toSearch.loading,
+              toSearch.error
+            )}
           </div>
         </div>
       </div>

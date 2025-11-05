@@ -4,7 +4,7 @@ import FlightDealCard from "./FlightDealCard";
 // import { useAppData } from "../../hooks/useAppData";
 import { SWIPE_THRESHOLD } from "../../utils/constants";
 import { useConfig } from "@/context/configContext";
-import { useCarousels } from "@/hooks/useCarousel";
+import { useCarousels } from "@/hooks/useHomeUtilities";
 
 interface FlightDeal {
   id: string;

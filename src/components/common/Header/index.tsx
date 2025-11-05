@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "./index.scss";
 import { useLogin } from "../../../hooks/useLogin";
 import { useConfig } from "@/context/configContext";
+import Sidebar from "@/components/Sidebar";
+import { Menu, X } from "lucide-react";
 
 const Header: React.FC = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -14,7 +16,7 @@ const Header: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { config } = useConfig();
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleClosePopup = () => {
     setShowLoginPopup(false);
     setCredentials({ email: "", password: "" });
@@ -47,18 +49,27 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="flex justify-between items-center p-6 relative w-full">
-      <div className="flex items-center gap-8">
-        <Link
-          to="/"
-          className="md:text-2xl text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors"
+    <header className="flex justify-between items-center p-6 pl-0 relative w-full">
+      <div className="flex gap-2 items-center">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="pl-4 text-gray-700 rounded-md"
         >
-          <img
-            src={config?.logo}
-            alt={config?.site_title}
-            className="h-8 object-contain"
-          />
-        </Link>
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <div className="flex items-center gap-8">
+          <Link
+            to="/"
+            className="md:text-2xl text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors"
+          >
+            <img
+              src={config?.logo}
+              alt={config?.site_title}
+              className="h-8 object-contain"
+            />
+          </Link>
+        </div>
       </div>
 
       <div className="flex md:gap-4 gap-2">

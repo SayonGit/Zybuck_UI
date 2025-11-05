@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import DestinationCard from "./DestinationCard";
 // import { useAppData } from "../../hooks/useAppData";
 import { useConfig } from "@/context/configContext";
-import { useCarousels } from "@/hooks/useCarousel";
+import { useCarousels } from "@/hooks/useHomeUtilities";
 
 type TabType = "popular" | "cities" | "countries" | "regions" | "airports";
 

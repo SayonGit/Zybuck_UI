@@ -7,7 +7,7 @@ import HotelForm from "../HotelForm";
 import CarForm from "../CarForm";
 import { useAppData } from "../../../hooks/useAppData";
 import { useConfig } from "@/context/configContext";
-import { useCarousels } from "@/hooks/useCarousel";
+import { useCarousels } from "@/hooks/useHomeUtilities";
 
 type TabTypes = "flights" | "stay" | "car";
 

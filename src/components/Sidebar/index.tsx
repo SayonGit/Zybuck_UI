@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useConfig } from "@/context/configContext";
-import { useMenu } from "@/hooks/useMenu";
+import { useMenu } from "@/hooks/useHomeUtilities";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -58,8 +58,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             {/* Menu */}
             <nav className="flex-1 overflow-y-auto mt-2">
               <ul className="space-y-1">
-                {mainMenu?.map((item) => (
-                  <li key={item.id}>
+                {mainMenu?.map((item, index) => (
+                  <li key={index}>
                     <div
                       onClick={() =>
                         item.children?.length
@@ -104,8 +104,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.25 }}
                         >
-                          {item.children.map((child) => (
-                            <li key={child.id}>
+                          {item.children.map((child, index) => (
+                            <li key={index}>
                               <a
                                 href={child.url}
                                 className="block px-4 py-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 transition-colors rounded"
