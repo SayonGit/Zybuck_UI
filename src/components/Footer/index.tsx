@@ -1,13 +1,18 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import { useConfig } from "@/context/configContext";
-import { useMenu } from "@/hooks/useHomeUtilities";
+// import { useMenu } from "@/hooks/useHomeUtilities";
 
 const Footer: React.FC = () => {
-  const { footer, socialMenu } = useMenu();
-  const { config } = useConfig();
-  console.log("Footer config:", footer, socialMenu, config);
-  const footerColumns = [footer.footer1, footer.footer2, footer.footer3].filter(
+  // const { footer, socialMenu } = useMenu();
+  const {
+    config,
+    social_menu: socialMenu,
+    footer_menu_1,
+    footer_menu_2,
+    footer_menu_3,
+  } = useConfig();
+  const footerColumns = [footer_menu_1, footer_menu_2, footer_menu_3].filter(
     Boolean
   );
 
@@ -70,7 +75,7 @@ const Footer: React.FC = () => {
           <p className="text-sm text-gray-500">{config?.footer_copyright}</p>
 
           <div className="flex items-center gap-5">
-            {socialMenu.map((item, index) => (
+            {socialMenu?.social_menu?.map((item, index) => (
               <a
                 href={item.url}
                 aria-label={item.title}
