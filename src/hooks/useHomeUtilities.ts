@@ -23,6 +23,17 @@ export const useMainMenus = () => {
   });
 };
 
+// export const useInitConfig = () => {
+//   return useQuery({
+//     queryKey: ["initConfig"],
+//     queryFn: fetchInitConfig,
+//     staleTime: STALE_TIME,
+//     gcTime: GC_TIME,
+//     refetchOnWindowFocus: false,
+//     refetchOnMount: false,
+//   });
+// };
+
 export const useSocialMenus = () => {
   return useQuery({
     queryKey: ["socialMenus"],

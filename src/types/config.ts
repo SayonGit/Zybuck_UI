@@ -159,3 +159,49 @@ export interface ImageDataDashboardResponse {
   popular_destinations: PopularDestination[];
   scrolling_images: ScrollingImage[];
 }
+
+export interface InitDataResponse {
+  settings: Settings;
+  main_menu: { main_menu: MainMenu[] };
+  social_menu: { social_menu: SocialMenu[] };
+  footer_menu_1: { heading: string; footer_menu: FooterMenu[] };
+  footer_menu_2: { heading: string; footer_menu: FooterMenu[] };
+  footer_menu_3: { heading: string; footer_menu: FooterMenu[] };
+}
+
+export interface Settings {
+  site_title: string;
+  site_description: string;
+  seo_title: string;
+  seo_description: string;
+  footer_copyright: string;
+  contact_email: string;
+  phone: string;
+  address: string;
+  logo: string;
+  favicon: string;
+  primary_color: string;
+  secondary_color: string;
+  primary_font: string;
+  secondary_font: string;
+  hero_banner: HeroBanner;
+  home_page: HomePage;
+  flight_deals: FlightDeals;
+  trending_cities: TrendingCities;
+  popular_destinations: PopularDestinations;
+  social_links: SocialLink[][];
+  isCached: boolean;
+}
+
+export interface HomePage {
+  content: string;
+  image: string;
+  banner_image: any;
+  seo: Seo;
+}
+
+export interface Seo {
+  meta_title: any;
+  meta_description: any;
+  is_index: any;
+}

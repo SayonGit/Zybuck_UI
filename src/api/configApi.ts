@@ -1,6 +1,7 @@
 import type {
   ConfigResponse,
   FooterResponse,
+  InitDataResponse,
   MainMenuResponse,
   SocialMenuResponse,
 } from "@/types/config";
@@ -13,6 +14,16 @@ export const fetchSiteConfig = async (): Promise<ConfigResponse> => {
     },
   });
   if (res.status !== 200) throw new Error("Failed to fetch configuration");
+  return res.data;
+};
+
+export const fetchInitConfig = async (): Promise<InitDataResponse> => {
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/init`, {
+    headers: {
+      Authorization: import.meta.env.VITE_API_KEY,
+    },
+  });
+  if (res.status !== 200) throw new Error("Failed to fetch init configuration");
   return res.data;
 };
 

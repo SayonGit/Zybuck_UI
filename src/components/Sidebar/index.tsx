@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useConfig } from "@/context/configContext";
-import { useMenu } from "@/hooks/useHomeUtilities";
+// import { useMenu } from "@/hooks/useHomeUtilities";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,8 +10,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
-  const { config } = useConfig();
-  const { mainMenu } = useMenu();
+  const { config, main_menu: mainMenu } = useConfig();
+  // const { mainMenu } = useMenu();
   const [expanded, setExpanded] = useState<number | null>(null);
 
   const toggleExpand = (id: number) => {
@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             {/* Menu */}
             <nav className="flex-1 overflow-y-auto mt-2">
               <ul className="space-y-1">
-                {mainMenu?.map((item, index) => (
+                {mainMenu?.main_menu?.map((item, index) => (
                   <li key={index}>
                     <div
                       onClick={() =>
