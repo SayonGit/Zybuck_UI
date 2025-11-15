@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import { useConfig } from "@/context/configContext";
+import { Link } from "react-router-dom";
 // import { useMenu } from "@/hooks/useHomeUtilities";
 
 const Footer: React.FC = () => {
@@ -30,22 +31,52 @@ const Footer: React.FC = () => {
               <ul className="space-y-2">
                 {col?.footer_menu?.map((link: any, index) => (
                   <li key={index}>
-                    <a
-                      href={link.url || "#"}
+                    <Link
+                      to={link.url || "/"}
                       className="text-sm hover:text-primary-600 transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
                     >
                       {link.title}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+          <div>
+            <h4 className="mb-4 font-semibold text-gray-900">Contact</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  to={"/"}
+                  className="text-sm text-primary-600 transition-colors"
+                >
+                  <Icon icon="mdi:location" className="inline w-4 h-4 mr-2" />
+                  {config?.address || "<Address>"}
+                </Link>
+              </li>
+              <li>
+                <a
+                  href={`tel:${config?.phone || "<Phone Number>"}`}
+                  className="text-sm text-primary-600 transition-colors"
+                >
+                  <Icon icon="mdi:call" className="inline w-4 h-4 mr-2" />
+                  {config?.phone || "<Phone Number>"}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${config?.contact_email || "<Email>"}`}
+                  className="text-sm text-primary-600 transition-colors"
+                >
+                  <Icon icon="mdi:email" className="inline w-4 h-4 mr-2" />
+                  {config?.contact_email || "<Email>"}
+                </a>
+              </li>
+            </ul>
+          </div>
 
           {/* App Store / Play Store Section */}
-          <div>
+          {/* <div>
             <h4 className="mb-4 font-semibold text-gray-900">Get this app</h4>
             <div className="space-y-5">
               <a href="#" aria-label="Download on Google Play">
@@ -65,7 +96,7 @@ const Footer: React.FC = () => {
                 />
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

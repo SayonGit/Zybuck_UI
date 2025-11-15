@@ -3,6 +3,16 @@ import { useCallback, useEffect, useState } from "react";
 
 export interface BlogResponse {
   posts: Posts;
+  blogs_page: {
+    banner_image: string;
+    description: string;
+    title: string;
+    seo: {
+      meta_title: string;
+      meta_description: string;
+      is_index: string;
+    };
+  };
 }
 
 export interface Posts {

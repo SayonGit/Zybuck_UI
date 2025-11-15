@@ -32,9 +32,11 @@ export const BlogPostCard: FC<{ post: Daum }> = ({ post }) => (
 
       {/* Title and Excerpt */}
       <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-2 leading-snug hover:text-blue-700 transition-colors cursor-pointer">
-          {post.name}
-        </h3>
+        <Link to={`/blogs/${post.slug}`}>
+          <h3 className="text-xl font-bold text-gray-900 mb-2 leading-snug hover:text-blue-700 transition-colors cursor-pointer">
+            {post.name}
+          </h3>
+        </Link>
         {/* <p className="text-gray-600 text-sm">{post.excerpt}</p> */}
       </div>
 

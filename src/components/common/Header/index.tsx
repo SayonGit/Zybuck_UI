@@ -73,6 +73,13 @@ const Header: React.FC = () => {
       </div>
 
       <div className="flex md:gap-4 gap-2">
+        <a
+          // onClick={() => setShowLoginPopup(!showLoginPopup)}
+          href={`tel:${config?.phone || "<Phone Number>"}`}
+          className="md:px-6 md:py-2 px-4 py-2 md:font-medium text-sm bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+        >
+          {config?.phone}
+        </a>
         {!isLoggedIn ? (
           <button
             onClick={() => setShowLoginPopup(!showLoginPopup)}

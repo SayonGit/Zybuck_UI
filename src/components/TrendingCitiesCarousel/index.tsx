@@ -40,6 +40,7 @@ const TrendingCitiesCarousel: React.FC = () => {
     image: city.image,
     isRoundTrip: true,
     type: "international", // Default to international
+    url: city.url || "/",
   }));
 
   const itemsPerView = {
