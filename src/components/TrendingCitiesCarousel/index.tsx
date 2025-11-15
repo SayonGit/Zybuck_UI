@@ -1,22 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
-import TrendingCities from "./TrendingCitiesCard";
+import TrendingCitiesCard, { type TrendingCities } from "./TrendingCitiesCard";
 // import { useAppData } from "../../hooks/useAppData";
 import { SWIPE_THRESHOLD } from "../../utils/constants";
 import { useConfig } from "@/context/configContext";
 import { useCarousels } from "@/hooks/useHomeUtilities";
-
-interface TrendingCities {
-  id: string;
-  destination: string;
-  route: string;
-  price: string;
-  duration: string;
-  dates: string;
-  image: string;
-  isRoundTrip: boolean;
-  type: "international" | "domestic";
-}
 
 const TrendingCitiesCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -198,7 +186,7 @@ const TrendingCitiesCarousel: React.FC = () => {
                   className="flex-shrink-0 px-2"
                   style={{ width: `${100 / currentItemsPerView}%` }}
                 >
-                  <TrendingCities deal={deal} />
+                  <TrendingCitiesCard deal={deal} />
                 </div>
               ))}
             </div>

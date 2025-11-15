@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 
-interface TrendingCities {
+export interface TrendingCities {
   id: string;
   destination: string;
   route: string;
@@ -12,6 +12,7 @@ interface TrendingCities {
   image: string;
   isRoundTrip: boolean;
   deal?: string;
+  url?: string;
 }
 
 interface TrendingCitiesCardProps {
