@@ -53,7 +53,8 @@ const FormControl: React.FC = () => {
                     <button
                       className={`flex flex-col items-center p-3 sm:p-4 rounded-xl transition-colors ${
                         activeTab === tab.id
-                          ? "bg-[#ff690f] hover:bg-[#ff4538] shadow-sm text-white"
+                          ? // ? "bg-[#ff690f] hover:bg-[#ff4538] shadow-sm text-white"
+                            "bg-primary-500 hover:bg-primary-600 shadow-sm text-white"
                           : "text-gray-600 bg-white hover:bg-white/50"
                       }`}
                       onClick={(event) =>

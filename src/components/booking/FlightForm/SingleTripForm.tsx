@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../../../store/hooks";
 import {
   updateFormData,
@@ -22,14 +22,52 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
   const fromSearch = useAirportSearch(formData.to);
   const toSearch = useAirportSearch(formData.from);
 
+  // open state for suggestion dropdowns
+  const [fromOpen, setFromOpen] = useState(false);
+  const [toOpen, setToOpen] = useState(false);
+
+  // collect wrapper nodes (desktop + mobile wrappers) into an array
+  const wrapperNodes = useRef<HTMLDivElement[]>([]);
+  const setWrapperRef = (el: HTMLDivElement | null) => {
+    if (!el) return;
+    if (!wrapperNodes.current.includes(el)) wrapperNodes.current.push(el);
+  };
+
   const handleSelect = useCallback(
     (type: "from" | "to", value: string) => {
       dispatch(updateFormData({ [type]: value }));
-      if (type === "from") fromSearch.setQuery("");
-      if (type === "to") toSearch.setQuery("");
+      // clear queries in the search hook as you had before
+      if (type === "from") {
+        fromSearch.setQuery("");
+        setFromOpen(false);
+      }
+      if (type === "to") {
+        toSearch.setQuery("");
+        setToOpen(false);
+      }
     },
     [dispatch, fromSearch, toSearch]
   );
+
+  // close dropdowns when clicking outside any wrapper
+  useEffect(() => {
+    const onDocumentMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node | null;
+      if (!target) return;
+
+      const clickedInsideAny = wrapperNodes.current.some((node) =>
+        node.contains(target)
+      );
+
+      if (!clickedInsideAny) {
+        setFromOpen(false);
+        setToOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onDocumentMouseDown);
+    return () => document.removeEventListener("mousedown", onDocumentMouseDown);
+  }, []);
 
   const renderSuggestions = (
     suggestions: ReturnType<typeof useAirportSearch>["suggestions"],
@@ -37,7 +75,6 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
     loading: boolean,
     error?: string
   ) => {
-    // if (formData[type] === "") return null;
     return (
       <div className="absolute z-50 bg-white rounded-lg mt-1 w-full shadow-lg max-h-56 overflow-y-auto">
         {loading && (
@@ -94,17 +131,23 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
   return (
     <>
       {/* From/To Section - Desktop Version */}
-      <div className="w-full md:w-[55%] md:block hidden">
+      <div className="w-full md:max-w-[55%] md:block hidden">
         <div className="flex gap-2 border b-clr rounded-lg h-input">
-          <div className="relative flex-1">
+          <div
+            className="relative flex-1"
+            // attach wrapper ref for outside-click detection
+            ref={setWrapperRef}
+          >
             <InputField
               label="From"
               value={formData.from}
               isDouble={true}
               placeholder="Enter city or airport"
+              {...({ onFocus: () => setFromOpen(true) } as any)}
               onChange={(val) => {
                 fromSearch.setQuery(val);
                 dispatch(updateFormData({ from: val }));
+                setFromOpen(true);
               }}
             />
             {formData.from && (
@@ -117,12 +160,13 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(
-              fromSearch.suggestions,
-              "from",
-              fromSearch.loading,
-              fromSearch.error
-            )}
+            {fromOpen &&
+              renderSuggestions(
+                fromSearch.suggestions,
+                "from",
+                fromSearch.loading,
+                fromSearch.error
+              )}
           </div>
 
           <div className="flex items-center px-2">
@@ -132,15 +176,17 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
               onClick={swapLocations}
             />
           </div>
-          <div className="relative flex-1">
+          <div className="relative flex-1" ref={setWrapperRef}>
             <InputField
               label="To"
               value={formData.to}
               placeholder="Enter city or airport"
               isDouble={true}
+              {...({ onFocus: () => setToOpen(true) } as any)}
               onChange={(val) => {
                 toSearch.setQuery(val);
                 dispatch(updateFormData({ to: val }));
+                setToOpen(true);
               }}
             />
             {formData.to && (
@@ -153,27 +199,30 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(
-              toSearch.suggestions,
-              "to",
-              toSearch.loading,
-              toSearch.error
-            )}
+            {toOpen &&
+              renderSuggestions(
+                toSearch.suggestions,
+                "to",
+                toSearch.loading,
+                toSearch.error
+              )}
           </div>
         </div>
       </div>
 
       {/* From/To Section - Mobile Version */}
-      <div className="w-full md:w-[55%] md:hidden block">
+      <div className="w-full md:max-w-[55%] md:hidden block">
         <div className="flex flex-col gap-2">
-          <div className="relative flex-1">
+          <div className="relative flex-1" ref={setWrapperRef}>
             <InputField
               label="From"
               value={formData.from}
               placeholder="Enter city or airport"
+              {...({ onFocus: () => setFromOpen(true) } as any)}
               onChange={(val) => {
                 fromSearch.setQuery(val);
                 dispatch(updateFormData({ from: val }));
+                setFromOpen(true);
               }}
             />
             {formData.from && (
@@ -186,24 +235,27 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(
-              fromSearch.suggestions,
-              "from",
-              fromSearch.loading,
-              fromSearch.error
-            )}
+            {fromOpen &&
+              renderSuggestions(
+                fromSearch.suggestions,
+                "from",
+                fromSearch.loading,
+                fromSearch.error
+              )}
           </div>
           <div className="flex items-center mx-auto px-2">
             <img src={InputDividerIcon} className="w-4 h-4" />
           </div>
-          <div className="relative flex-1">
+          <div className="relative flex-1" ref={setWrapperRef}>
             <InputField
               label="To"
               placeholder="Enter city or airport"
               value={formData.to}
+              {...({ onFocus: () => setToOpen(true) } as any)}
               onChange={(value) => {
                 toSearch.setQuery(value);
                 dispatch(updateFormData({ to: value }));
+                setToOpen(true);
               }}
             />
             {formData.to && (
@@ -216,12 +268,13 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
                 }}
               />
             )}
-            {renderSuggestions(
-              toSearch.suggestions,
-              "to",
-              toSearch.loading,
-              toSearch.error
-            )}
+            {toOpen &&
+              renderSuggestions(
+                toSearch.suggestions,
+                "to",
+                toSearch.loading,
+                toSearch.error
+              )}
           </div>
         </div>
       </div>
@@ -229,7 +282,9 @@ const SingleTripForm: React.FC<SingleTripFormProps> = ({ selectedTrip }) => {
       {/* Date Section - Responsive for One Way vs Round Trip */}
       <div
         className={`w-full ${
-          selectedTrip === TripOption.roundTrip ? "md:w-[25%]" : "md:w-[15%]"
+          selectedTrip === TripOption.roundTrip
+            ? "md:max-w-[25%]"
+            : "md:max-w-[15%]"
         }`}
       >
         {/* Desktop Layout - Dates side by side for round trip */}

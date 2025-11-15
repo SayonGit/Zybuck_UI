@@ -36,7 +36,10 @@ export const BlogPage: FC = () => {
                 <div
                   className="absolute inset-0 bg-cover bg-center transition-all duration-500"
                   style={{
-                    backgroundImage: `url('${data?.posts.data[0].banner_image}')`,
+                    backgroundImage: `url('${
+                      data?.blogs_page.banner_image ||
+                      data?.posts.data[0].banner_image
+                    }')`,
                   }}
                   aria-label="Background image for blog hero section"
                 >
@@ -47,10 +50,11 @@ export const BlogPage: FC = () => {
                 {/* Content Overlay - Used for the main title */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
                   <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white text-shadow-lg tracking-tight mb-2">
-                    Blogs
+                    {data?.blogs_page.title || "Blogs"}
                   </h1>
                   <p className="text-lg text-gray-200 text-shadow-lg hidden sm:block">
-                    Thoughts, stories, and news from our team.
+                    {data?.blogs_page.description ||
+                      "Thoughts, stories, and news from our team."}
                   </p>
                 </div>
 

@@ -43,6 +43,7 @@ const FlightDealsCarousel: React.FC = () => {
       image: deal.image,
       isRoundTrip: true,
       type: deal.type || "international",
+      url: deal.url || "/",
     })
   );
 

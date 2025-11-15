@@ -29,10 +29,10 @@ const PassengerCounters: React.FC<PassengerCountersProps> = ({
     <div
       className={`flex flex-col sm:flex-row md:flex-row gap-2 w-full ${
         selectedTrip === "multipleDestination"
-          ? "md:w-[30%]"
+          ? "md:max-w-[30%]"
           : selectedTrip === "roundTrip"
-          ? "md:w-[20%]"
-          : "md:w-[30%]"
+          ? "md:max-w-[24%]"
+          : "md:max-w-[30%]"
       }`}
     >
       {(["adults", "children", "infants"] as const).map((type) => (

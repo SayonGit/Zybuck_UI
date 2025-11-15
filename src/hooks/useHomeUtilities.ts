@@ -4,6 +4,7 @@ import {
   fetchMainMenus,
   fetchFooters,
   fetchSocialMenus,
+  fetchInitConfig,
 } from "@/api/configApi";
 import { useQuery } from "@tanstack/react-query";
 import { useIsFetching, useIsMutating } from "@tanstack/react-query";
@@ -23,16 +24,16 @@ export const useMainMenus = () => {
   });
 };
 
-// export const useInitConfig = () => {
-//   return useQuery({
-//     queryKey: ["initConfig"],
-//     queryFn: fetchInitConfig,
-//     staleTime: STALE_TIME,
-//     gcTime: GC_TIME,
-//     refetchOnWindowFocus: false,
-//     refetchOnMount: false,
-//   });
-// };
+export const useInitConfig = () => {
+  return useQuery({
+    queryKey: ["initConfig"],
+    queryFn: fetchInitConfig,
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
 
 export const useSocialMenus = () => {
   return useQuery({
